@@ -7,7 +7,21 @@
   },
   "main": "index.js",
   "scripts": {
+    "build": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "webpack": "^5.74.0",
+    "webpack-dev-server": "^4.11.1",
+    "commander": "^9.4.1",
+    "chalk": "^5.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.4",
+    "rollup": "^2.79.1",
+    "@rollup/plugin-typescript": "^8.5.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "rollup-plugin-preserve-shebang": "^1.0.1"
   },
   "keywords": [],
   "author": "",
