@@ -21,6 +21,8 @@ const config: RollupOptions = {
         'webpackbar',
         'webpack-dev-server',
         'html-webpack-plugin',
+        '@pmmmwh/react-refresh-webpack-plugin',
+        "portfinder"
     ],
 };
 export default config;

@@ -3,10 +3,10 @@ import * as path from "path";
 import WebpackBar from 'webpackbar';
 import WebpackDevServer from 'webpack-dev-server';
 import HtmlWebpackPlugin from "html-webpack-plugin";
+import ReactRefreshPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 
 const {ModuleFederationPlugin} = webpack.container;
 const root = process.cwd();
-
 const config: Configuration [] = [
     {
         context: path.resolve('packages', 'base'),
@@ -15,7 +15,7 @@ const config: Configuration [] = [
         entry: path.resolve('packages', 'base', 'src', 'index.ts'),
         output: {
             clean: false,
-            path: path.resolve(root, 'dist'),
+            path: path.resolve(root, 'dist', 'base'),
             chunkFilename: "chunk.[contenthash:8].js",
             filename: "[name].js",
         },
@@ -31,6 +31,9 @@ const config: Configuration [] = [
                                     '@babel/preset-env',
                                     '@babel/preset-react',
                                     '@babel/preset-typescript',
+                                ],
+                                plugins: [
+                                    'react-refresh/babel'
                                 ]
                             }
                         }
@@ -46,12 +49,17 @@ const config: Configuration [] = [
                 name: 'base',
                 remotes: {
                     utils: 'utils@http://localhost:3000/utils/remoteEntry.js'
+                },
+                shared: {
+                    react: "17.0.2",
+                    "react-dom": "17.0.2",
                 }
             }),
             new WebpackBar(),
             new HtmlWebpackPlugin({
                 template: './public/index.html'
-            })
+            }),
+            new ReactRefreshPlugin(),
         ]
     },
     {
@@ -73,7 +81,7 @@ const config: Configuration [] = [
                     './add': './add.js',
                 }
             }),
-            new WebpackBar()
+            new WebpackBar(),
         ]
     },
 ];
@@ -81,10 +89,9 @@ export default function serve() {
     const compiler = webpack(config);
     const server = new WebpackDevServer({
         port: 3000,
+        hot: 'only',
     }, compiler);
-    server.startCallback(() => {
-        console.log('listen on port 3000');
-    });
+    server.start();
     // compiler.run((error, {stats: statList}) => {
     //     for (let stats of statList) {
     //         if (stats.hasErrors()) {
