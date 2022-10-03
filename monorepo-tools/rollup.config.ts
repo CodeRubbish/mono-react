@@ -15,7 +15,12 @@ const config: RollupOptions = {
         shebang()
     ],
     external: [
-        'commander'
-    ]
+        'commander',
+        'webpack',
+        'path',
+        'webpackbar',
+        'webpack-dev-server',
+        'html-webpack-plugin',
+    ],
 };
 export default config;

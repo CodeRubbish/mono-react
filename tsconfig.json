@@ -1,9 +1,16 @@
 {
   "compilerOptions": {
+    "baseUrl": "./packages",
     "module": "commonjs",
     "target": "es5",
     "sourceMap": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "paths": {
+      "utils/*": [
+        "utils/*"
+      ]
+    }
   },
   "exclude": [
     "node_modules"

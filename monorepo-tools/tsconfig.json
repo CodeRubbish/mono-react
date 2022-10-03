@@ -5,7 +5,7 @@
     "allowSyntheticDefaultImports": true,
     "outDir": "bin",
     "module": "esnext",
-    "target": "es5",
+    "target": "es6",
     "sourceMap": false,
     "moduleResolution": "node"
   },
