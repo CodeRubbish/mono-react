@@ -10,39 +10,9 @@ const root = process.cwd();
 const config: Configuration [] = [
     {
         context: path.resolve('packages', 'base'),
-        mode: 'development',
-        devtool: "eval-cheap-module-source-map",
         entry: path.resolve('packages', 'base', 'src', 'index.ts'),
         output: {
-            clean: false,
-            path: path.resolve(root, 'dist', 'base'),
-            chunkFilename: "chunk.[contenthash:8].js",
-            filename: "[name].js",
-        },
-        module: {
-            rules: [
-                {
-                    test: /\.tsx?$/,
-                    use: [
-                        {
-                            loader: 'babel-loader',
-                            options: {
-                                presets: [
-                                    '@babel/preset-env',
-                                    '@babel/preset-react',
-                                    '@babel/preset-typescript',
-                                ],
-                                plugins: [
-                                    'react-refresh/babel'
-                                ]
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        resolve: {
-            extensions: ['.ts', '.tsx', '...'],
+            path: path.resolve(root, 'dist'),
         },
         plugins: [
             new ModuleFederationPlugin({
@@ -60,11 +30,43 @@ const config: Configuration [] = [
                 template: './public/index.html'
             }),
             new ReactRefreshPlugin(),
-        ]
+        ],
+        stats: {
+            colors: true,
+            hash: false,
+            version: false,
+            timings: false,
+            assets: false,
+            chunks: false,
+            modules: false,
+            reasons: false,
+            children: false,
+            source: false,
+            errors: false,
+            errorDetails: false,
+            warnings: false,
+            publicPath: false
+        },
     },
     {
         context: path.resolve('packages', 'utils'),
         entry: path.resolve('packages', 'utils', 'index.js'),
+        stats: {
+            colors: true,
+            hash: false,
+            version: false,
+            timings: false,
+            assets: false,
+            chunks: false,
+            modules: false,
+            reasons: false,
+            children: false,
+            source: false,
+            errors: false,
+            errorDetails: false,
+            warnings: false,
+            publicPath: false
+        },
         mode: 'development',
         devtool: "eval-cheap-module-source-map",
         output: {
@@ -89,7 +91,7 @@ export default function serve() {
     const compiler = webpack(config);
     const server = new WebpackDevServer({
         port: 3000,
-        hot: 'only',
+        hot: true,
     }, compiler);
     server.start();
     // compiler.run((error, {stats: statList}) => {

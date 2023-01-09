@@ -22,7 +22,9 @@ const config: RollupOptions = {
         'webpack-dev-server',
         'html-webpack-plugin',
         '@pmmmwh/react-refresh-webpack-plugin',
-        "portfinder"
+        "portfinder",
+        "fs",
+        "process"
     ],
 };
 export default config;
