@@ -68,7 +68,7 @@ const commonConfig: WebpackConfiguration = {
         ]
     }
 };
-const getDevConfig = (project) => {
+export const getDevConfig = (project) => {
     // const config = generateConfig(project);
     // merge(commonConfig, config);
 };

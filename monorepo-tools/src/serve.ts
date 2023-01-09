@@ -109,12 +109,31 @@ function readConfigFromProject(projects) {
             },
             mode: 'development',
             devtool: "eval-cheap-module-source-map",
+            resolve: {
+                extensions: ['.ts', '.tsx', '...']
+            },
         };
         if (isProject(type)) {
             config = {
                 ...config,
-                resolve: {
-                    extensions: ['.ts', '.tsx', '...']
+                module: {
+                    rules: [
+                        {
+                            oneOf: [
+                                {
+                                    test: /[jt]sx?$/,
+                                    loader: require.resolve('babel-loader'),
+                                    options: {
+                                        presets: [
+                                            require.resolve('@babel/preset-env'),
+                                            require.resolve('@babel/preset-react'),
+                                            require.resolve('@babel/preset-typescript'),
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ],
                 },
                 plugins: [
                     new ModuleFederationPlugin({

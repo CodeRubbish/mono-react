@@ -12,7 +12,8 @@ function analysisEntry(projectName) {
 }
 
 function analysisType(projectName) {
-    const html = path.resolve(root, 'packages', projectName, 'src', 'public', 'index.html');
+    const html = path.resolve(root, 'packages', projectName, 'public', 'index.html');
+    console.log(html);
     if (fs.existsSync(html)) {
         return {
             type: 'project',
