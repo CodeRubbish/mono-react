@@ -4,6 +4,8 @@ import WebpackBar from 'webpackbar';
 import WebpackDevServer from 'webpack-dev-server';
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import ReactRefreshPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+import {getDevConfig} from "./getDevConfig";
+import {merge} from "webpack-merge";
 
 const {ModuleFederationPlugin} = webpack.container;
 const root = process.cwd();
@@ -88,76 +90,19 @@ const config: Configuration [] = [
     },
 ];
 
-function isProject(type) {
-    return type === 'project';
-}
-
-function isLib(type) {
-    return type === 'lib';
-}
-
 function readConfigFromProject(projects) {
     const webpackConfig: Configuration[] = [];
     const remotes = {};
     for (const project of projects) {
-        const {name, entry, type, htmlTemplate} = project;
-        let config: Configuration = {
-            context: path.resolve('packages', name),
-            entry,
-            output: {
-                path: path.resolve(root, 'packages', name, 'dist'),
-            },
-            mode: 'development',
-            devtool: "eval-cheap-module-source-map",
-            resolve: {
-                extensions: ['.ts', '.tsx', '...']
-            },
-        };
-        if (isProject(type)) {
-            config = {
-                ...config,
-                module: {
-                    rules: [
-                        {
-                            oneOf: [
-                                {
-                                    test: /[jt]sx?$/,
-                                    loader: require.resolve('babel-loader'),
-                                    options: {
-                                        presets: [
-                                            require.resolve('@babel/preset-env'),
-                                            require.resolve('@babel/preset-react'),
-                                            require.resolve('@babel/preset-typescript'),
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    ],
-                },
-                plugins: [
-                    new ModuleFederationPlugin({
-                        name: name,
-                        remotes: remotes,
-                    }),
-                    new HtmlWebpackPlugin({
-                        template: htmlTemplate
-                    }),
-                    new ReactRefreshPlugin(),
-                ],
-            };
-        } else if (isLib(type)) {
-            config = {
-                ...config,
-                plugins: [
-                    new ModuleFederationPlugin({
-                        name: name,
-                        remotes: remotes,
-                    }),
-                ]
-            };
-        }
-
+        const config = getDevConfig(project);
+        merge(config, {
+            plugins: [
+                new ModuleFederationPlugin({
+                    name: project.name,
+                    remotes: remotes,
+                }),
+            ]
+        });
         webpackConfig.push(config);
     }
     return webpackConfig;

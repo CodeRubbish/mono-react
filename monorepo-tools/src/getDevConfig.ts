@@ -1,15 +1,12 @@
-import * as path from "path";
-import * as fs from 'fs';
-import webpack from "webpack";
-import WebpackBar from 'webpackbar';
-import WebpackDevServer from 'webpack-dev-server';
-import HtmlWebpackPlugin from "html-webpack-plugin";
+import {Configuration} from "webpack";
 import ReactRefreshPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import {WebpackConfiguration} from "webpack-cli";
-import {merge} from 'webpack-merge';
+import path from "path";
+import {isApplication} from "./scan";
+import {merge} from "webpack-merge";
+import HtmlWebpackPlugin from "html-webpack-plugin";
 
-const {ModuleFederationPlugin} = webpack.container;
-
+const root = process.cwd();
 const commonConfig: WebpackConfiguration = {
     mode: "development",
     devtool: "eval-cheap-module-source-map",
@@ -18,57 +15,66 @@ const commonConfig: WebpackConfiguration = {
         chunkFilename: "chunk.[name].js",
         filename: "[name].js",
     },
-    stats: {
-        colors: true,
-        hash: false,
-        version: false,
-        timings: false,
-        assets: false,
-        chunks: false,
-        modules: false,
-        reasons: false,
-        children: false,
-        source: false,
-        errors: false,
-        errorDetails: false,
-        warnings: false,
-        publicPath: false
-    },
-    plugins: [
-        new WebpackBar(),
-        new ReactRefreshPlugin(),
-    ],
     resolve: {
         extensions: ['.ts', '.tsx', '...'],
     },
-    module: {
-        rules: [
+};
+const generateConfig = project => {
+    const {name, entry, htmlTemplate} = project;
+    let config: Configuration = {
+        context: path.resolve('packages', name),
+        entry,
+        output: {
+            path: path.resolve(root, 'packages', name, 'dist'),
+        },
+    };
+    if (isApplication(project)) {
+        const oneOfLoader = [
             {
-                oneOf: [
+                test: /\.tsx?$/,
+                use: [
                     {
-                        test: /\.tsx?$/,
-                        use: [
-                            {
-                                loader: 'babel-loader',
-                                options: {
-                                    presets: [
-                                        '@babel/preset-env',
-                                        '@babel/preset-react',
-                                        '@babel/preset-typescript',
-                                    ],
-                                    plugins: [
-                                        'react-refresh/babel'
-                                    ]
-                                }
-                            }
-                        ]
+                        loader: 'babel-loader',
+                        options: {
+                            presets: [
+                                '@babel/preset-env',
+                                '@babel/preset-react',
+                                '@babel/preset-typescript',
+                            ],
+                            plugins: [
+                                'react-refresh/babel'
+                            ]
+                        }
                     }
                 ]
+            },
+            {
+                test: /\.html$/,
+                loader: require.resolve('html-loader')
             }
-        ]
+        ];
+        config = {
+            ...config,
+            module: {
+                rules: [
+                    {
+                        oneOf: oneOfLoader
+                    }
+                ]
+            },
+            plugins: [
+                new HtmlWebpackPlugin({
+                    template: htmlTemplate,
+                }),
+                new ReactRefreshPlugin(),
+            ],
+        };
+    } else {
+        config = {};
     }
+    return config;
 };
 export const getDevConfig = (project) => {
-    // const config = generateConfig(project);
-    // merge(commonConfig, config);
+    const config = generateConfig(project);
+    return merge(commonConfig, config);
 };

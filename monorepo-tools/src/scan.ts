@@ -4,6 +4,19 @@ import * as process from "process";
 
 const root = process.cwd();
 
+enum ProjectType {
+    Application,
+    Lib,
+}
+
+export function isApplication(project) {
+    return project.type === ProjectType.Application;
+}
+
+export function isLib(project) {
+    return project.type === ProjectType.Lib;
+}
+
 function analysisEntry(projectName) {
     const entry = path.resolve(root, 'packages', projectName, 'src', 'index.ts');
     if (fs.existsSync(entry)) {
@@ -13,14 +26,15 @@ function analysisEntry(projectName) {
 
 function analysisType(projectName) {
     const html = path.resolve(root, 'packages', projectName, 'public', 'index.html');
-    console.log(html);
     if (fs.existsSync(html)) {
         return {
-            type: 'project',
+            type: ProjectType.Application,
             htmlTemplate: html,
         };
     } else {
-        return {type: 'lib'};
+        return {
+            type: ProjectType.Lib
+        };
     }
 }
 

@@ -19,12 +19,14 @@ const config: RollupOptions = {
         'webpack',
         'path',
         'webpackbar',
+        "webpack-merge",
         'webpack-dev-server',
         'html-webpack-plugin',
         '@pmmmwh/react-refresh-webpack-plugin',
         "portfinder",
         "fs",
-        "process"
+        "process",
+        "html-loader"
     ],
 };
 export default config;
