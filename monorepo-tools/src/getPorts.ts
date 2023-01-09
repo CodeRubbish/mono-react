@@ -1,7 +1,7 @@
 import * as portfinder from "portfinder";
 import {PortFinderOptions} from "portfinder";
 
-export default function getPorts(number, options: PortFinderOptions = {
+export default async function getPorts(number, options: PortFinderOptions = {
     port: 3000,
     stopPort: 65535,
 }) {

@@ -19,7 +19,9 @@
     "webpack": "^5.74.0",
     "webpack-dev-server": "^4.11.1",
     "webpack-merge": "^5.8.0",
-    "webpackbar": "^5.0.2"
+    "webpackbar": "^5.0.2",
+    "inquirer": "^9.1.4",
+    "tslib": "2.4.1"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",

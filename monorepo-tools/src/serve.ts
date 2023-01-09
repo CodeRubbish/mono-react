@@ -87,21 +87,77 @@ const config: Configuration [] = [
         ]
     },
 ];
-export default function serve() {
-    const compiler = webpack(config);
-    const server = new WebpackDevServer({
-        port: 3000,
-        hot: true,
-    }, compiler);
-    server.start();
-    // compiler.run((error, {stats: statList}) => {
-    //     for (let stats of statList) {
-    //         if (stats.hasErrors()) {
-    //             console.log(stats.toString({
-    //                 chunks: false,  // Makes the build much quieter
-    //                 colors: true    // Shows colors in the console
-    //             }));
-    //         }
-    //     }
-    // });
+
+function isProject(type) {
+    return type === 'project';
+}
+
+function isLib(type) {
+    return type === 'lib';
+}
+
+function readConfigFromProject(projects) {
+    const webpackConfig: Configuration[] = [];
+    const remotes = {};
+    for (const project of projects) {
+        const {name, entry, type, htmlTemplate} = project;
+        let config: Configuration = {
+            context: path.resolve('packages', name),
+            entry,
+            output: {
+                path: path.resolve(root, 'packages', name, 'dist'),
+            },
+            mode: 'development',
+            devtool: "eval-cheap-module-source-map",
+        };
+        if (isProject(type)) {
+            config = {
+                ...config,
+                resolve: {
+                    extensions: ['.ts', '.tsx', '...']
+                },
+                plugins: [
+                    new ModuleFederationPlugin({
+                        name: name,
+                        remotes: remotes,
+                    }),
+                    new HtmlWebpackPlugin({
+                        template: htmlTemplate
+                    }),
+                    new ReactRefreshPlugin(),
+                ],
+            };
+        } else if (isLib(type)) {
+            config = {
+                ...config,
+                plugins: [
+                    new ModuleFederationPlugin({
+                        name: name,
+                        remotes: remotes,
+                    }),
+                ]
+            };
+        }
+
+        webpackConfig.push(config);
+    }
+    return webpackConfig;
+}
+
+export default function serve(projects, ports) {
+    const webpackConfigs = readConfigFromProject(projects);
+    const {length} = webpackConfigs;
+    const runServer = async (server, name) => {
+        console.log('正在启动应用：' + name);
+        await server.start();
+        console.log('启动应用成功：' + name);
+    };
+    for (let i = 0; i < length; i++) {
+        const compiler = webpack(webpackConfigs[i]);
+        const server = new WebpackDevServer({
+            port: ports[i],
+            hot: true
+        }, compiler);
+        runServer(server, projects[i].name).catch(() => console.log('应用启动失败：' + projects[i].name));
+    }
 }

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import {program} from "commander";
 import {version} from '../package.json';
-import serve from './serve';
-import getPorts from "./getPorts";
 import scan from "./scan";
+import getPorts from "./getPorts";
+import serve from "./serve";
 
 program
     .name('monorepo-tools')
@@ -14,11 +14,10 @@ program.command('start')
     .option('--prod', 'production preset')
     .option('-p, --project', 'project')
     .action(() => {
-        scan();
-        // serve();
-        // getPorts(3).then(ports => {
-        //     console.log(ports);
-        // });
+        const projects = scan();
+        getPorts(projects.length).then(ports => {
+            serve(projects, ports);
+        });
     });
 
 program.parse();
