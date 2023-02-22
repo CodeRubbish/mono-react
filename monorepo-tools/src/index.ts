@@ -12,7 +12,7 @@ program
 
 program.command('start')
     .option('--prod', 'production preset')
-    .option('-p, --project', 'project')
+    .option('-p, --project <projectName>', 'project')
     .action(() => {
         const projects = scan();
         getPorts(projects.length).then(ports => {

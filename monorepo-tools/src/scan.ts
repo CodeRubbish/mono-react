@@ -17,6 +17,10 @@ export function isLib(project) {
     return project.type === ProjectType.Lib;
 }
 
+/**
+ * 判断项目入口是否存在，如果存在则返回入口，否则返回undefined;
+ * @param projectName
+ */
 function analysisEntry(projectName) {
     const entry = path.resolve(root, 'packages', projectName, 'src', 'index.ts');
     if (fs.existsSync(entry)) {
@@ -24,6 +28,10 @@ function analysisEntry(projectName) {
     }
 }
 
+/**
+ * 根据项目名称分析项目类型
+ * @param projectName
+ */
 function analysisType(projectName) {
     const html = path.resolve(root, 'packages', projectName, 'public', 'index.html');
     if (fs.existsSync(html)) {
@@ -50,6 +58,10 @@ function readProjectConfig(project) {
     };
 }
 
+/**
+ * 扫描根路径下的所有项目
+ * @param projectRootPath
+ */
 export default function scan(projectRootPath?) {
     if (!projectRootPath) {
         projectRootPath = path.resolve(process.cwd(), 'packages');

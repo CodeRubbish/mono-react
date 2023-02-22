@@ -4,41 +4,10 @@ import path from "path";
 import {isApplication} from "./scan";
 import {merge} from "webpack-merge";
 import HtmlWebpackPlugin from "html-webpack-plugin";
+import WebpackBar from 'webpackbar';
+import {getCommonCfg} from "./config";
 
 const root = process.cwd();
-const commonConfig: Configuration = {
-    mode: "development",
-    devtool: "eval-cheap-module-source-map",
-    output: {
-        clean: true,
-        chunkFilename: "chunk.[name].js",
-        filename: "[name].js",
-    },
-    resolve: {
-        extensions: ['.ts', '.tsx', '...'],
-    },
-};
-const normalConfig: Configuration = {
-    module: {
-        rules: [
-            {
-                oneOf: [
-                    {
-                        test: /\.less$/,
-                        use: [],
-                    },
-                    {
-                        test: /\.scss$/,
-                        use: [],
-                    },
-                    {
-
-                    }
-                ]
-            }
-        ]
-    },
-};
 const generateConfig = project => {
     const {name, entry, htmlTemplate} = project;
     let config: Configuration = {
@@ -96,5 +65,5 @@ const generateConfig = project => {
 };
 export const getDevConfig = (project) => {
     const config = generateConfig(project);
-    return merge(commonConfig, config);
+    return merge(getCommonCfg(true), config);
 };

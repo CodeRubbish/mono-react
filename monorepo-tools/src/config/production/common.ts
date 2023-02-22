@@ -1,5 +1,4 @@
 import {Configuration} from "webpack";
-import WebpackBar from "webpackbar";
 
 export const commonConfig: Configuration = {
     mode: "development",
@@ -9,13 +8,7 @@ export const commonConfig: Configuration = {
         chunkFilename: "chunk.[name].js",
         filename: "[name].js",
     },
-    plugins:[
-        new WebpackBar(),
-    ],
     resolve: {
         extensions: ['.ts', '.tsx', '...'],
     },
 };
-export const commonLoaders={
-
-}
