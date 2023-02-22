@@ -62,7 +62,7 @@ function readProjectConfig(project) {
  * 扫描根路径下的所有项目
  * @param projectRootPath
  */
-export default function scan(projectRootPath?) {
+export default function scanProject(projectRootPath?) {
     if (!projectRootPath) {
         projectRootPath = path.resolve(process.cwd(), 'packages');
     }

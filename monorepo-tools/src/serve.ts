@@ -6,11 +6,15 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import ReactRefreshPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import {getDevConfig} from "./getDevConfig";
 import {merge} from "webpack-merge";
+import {commonConfig} from "./config/dev/common";
+import {isApplication} from "./scan";
 
 const {ModuleFederationPlugin} = webpack.container;
 const root = process.cwd();
 const config: Configuration [] = [
     {
+        mode: "development",
+        devtool: "eval-cheap-module-source-map",
         context: path.resolve('packages', 'base'),
         entry: path.resolve('packages', 'base', 'src', 'index.ts'),
         output: {
@@ -33,42 +37,13 @@ const config: Configuration [] = [
             }),
             new ReactRefreshPlugin(),
         ],
-        stats: {
-            colors: true,
-            hash: false,
-            version: false,
-            timings: false,
-            assets: false,
-            chunks: false,
-            modules: false,
-            reasons: false,
-            children: false,
-            source: false,
-            errors: false,
-            errorDetails: false,
-            warnings: false,
-            publicPath: false
+        resolve: {
+            extensions: ['.ts', '.tsx', '...'],
         },
     },
     {
         context: path.resolve('packages', 'utils'),
         entry: path.resolve('packages', 'utils', 'index.js'),
-        stats: {
-            colors: true,
-            hash: false,
-            version: false,
-            timings: false,
-            assets: false,
-            chunks: false,
-            modules: false,
-            reasons: false,
-            children: false,
-            source: false,
-            errors: false,
-            errorDetails: false,
-            warnings: false,
-            publicPath: false
-        },
         mode: 'development',
         devtool: "eval-cheap-module-source-map",
         output: {
@@ -86,20 +61,39 @@ const config: Configuration [] = [
                 }
             }),
             new WebpackBar(),
-        ]
+        ],
+        resolve: {
+            extensions: ['.ts', '.tsx', '...'],
+        },
     },
 ];
 
-function readConfigFromProject(projects) {
+function readConfigFromProject(projects, ports) {
     const webpackConfig: Configuration[] = [];
     const remotes = {};
+    projects.forEach((project, index) => {
+        if (!isApplication(project)) {
+            remotes[project.name] = `${project.name}@http://localhost:${ports[index]}/remoteEntry.js`;
+        }
+    });
+    console.log(remotes);
+    const shared = require(path.resolve(root, 'package.json')).dependencies;
     for (const project of projects) {
-        const config = getDevConfig(project);
-        merge(config, {
+        let config = getDevConfig(project);
+        let extra = {};
+        if (!isApplication(project)) {
+            extra = {
+                exposes: {'./add': './src/add.ts'},
+            };
+        }
+        config = merge(config, {
             plugins: [
                 new ModuleFederationPlugin({
+                    filename: 'remoteEntry.js',
                     name: project.name,
-                    remotes: remotes,
+                    remotes,
+                    shared,
+                    ...extra
                 }),
             ]
         });
@@ -109,7 +103,7 @@ function readConfigFromProject(projects) {
 }
 
 export default function serve(projects, ports) {
-    const webpackConfigs = readConfigFromProject(projects);
+    const webpackConfigs = readConfigFromProject(projects, ports);
     const {length} = webpackConfigs;
     const runServer = async (server, name) => {
         console.log('正在启动应用：' + name);
@@ -120,7 +114,11 @@ export default function serve(projects, ports) {
         const compiler = webpack(webpackConfigs[i]);
         const server = new WebpackDevServer({
             port: ports[i],
-            hot: true
+            hot: true,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Method": "GET"
+            }
         }, compiler);
         runServer(server, projects[i].name).catch(() => console.log('应用启动失败：' + projects[i].name));
     }

@@ -59,7 +59,9 @@ const generateConfig = project => {
             ],
         };
     } else {
-        config = {};
+        config = {
+            ...config
+        };
     }
     return config;
 };

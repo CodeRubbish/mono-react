@@ -7,7 +7,7 @@ const config: RollupOptions = {
     input: './src/index.ts',
     output: {
         file: 'bin/index.js',
-        format: 'cjs'
+        format: 'commonjs'
     },
     plugins: [
         json(),
@@ -26,7 +26,8 @@ const config: RollupOptions = {
         "portfinder",
         "fs",
         "process",
-        "html-loader"
+        "html-loader",
+        "chalk"
     ],
 };
 export default config;

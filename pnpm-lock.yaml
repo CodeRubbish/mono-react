@@ -27,7 +27,6 @@ importers:
     dependencies:
       axios: registry.npmmirror.com/axios/0.24.0
       i18next: registry.npmmirror.com/i18next/19.9.2
-      monorepo-tools: link:monorepo-tools
       react: registry.npmmirror.com/react/17.0.2
       react-dom: registry.npmmirror.com/react-dom/17.0.2_react@17.0.2
       react-i18next: registry.npmmirror.com/react-i18next/11.3.4_ftpfmoxqd2lj3y767446p7m2ce
@@ -42,6 +41,7 @@ importers:
       babel-loader: registry.npmmirror.com/babel-loader/8.2.5_wfdvla2jorjoj23kkavho2upde
       clean-webpack-plugin: registry.npmmirror.com/clean-webpack-plugin/4.0.0_webpack@5.74.0
       html-webpack-plugin: registry.npmmirror.com/html-webpack-plugin/5.5.0_webpack@5.74.0
+      monorepo-tools: link:monorepo-tools
       typescript: registry.npmmirror.com/typescript/4.8.4
       webpack: registry.npmmirror.com/webpack/5.74.0_webpack-cli@4.10.0
       webpack-cli: registry.npmmirror.com/webpack-cli/4.10.0_vnmgq7jx5zjkzolvtfp7mdf5ri
@@ -57,7 +57,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-typescript': ^8.5.0
       babel-loader: ^9.1.2
-      chalk: ^5.0.1
+      chalk: ^4.0.0
       commander: ^9.4.1
       html-loader: ^4.2.0
       inquirer: ^9.1.4
@@ -78,7 +78,7 @@ importers:
       '@babel/preset-typescript': registry.npmmirror.com/@babel/preset-typescript/7.18.6_@babel+core@7.20.12
       '@pmmmwh/react-refresh-webpack-plugin': registry.npmmirror.com/@pmmmwh/react-refresh-webpack-plugin/0.5.7_pvgfg2i233iclh4uhrrgev3t5a
       babel-loader: registry.npmmirror.com/babel-loader/9.1.2_fzlwazi7nboub3int6sfk7gbca
-      chalk: registry.npmmirror.com/chalk/5.0.1
+      chalk: registry.npmmirror.com/chalk/4.1.2
       commander: registry.npmmirror.com/commander/9.4.1
       html-loader: registry.npmmirror.com/html-loader/4.2.0_webpack@5.74.0
       inquirer: registry.npmmirror.com/inquirer/9.1.4
@@ -4061,13 +4061,6 @@ packages:
     dependencies:
       ansi-styles: registry.npmmirror.com/ansi-styles/4.3.0
       supports-color: registry.npmmirror.com/supports-color/7.2.0
-    dev: false
-
-  registry.npmmirror.com/chalk/5.0.1:
-    resolution: {integrity: sha512-Fo07WOYGqMfCWHOzSXOt2CxDbC6skS/jO9ynEcmpANMoPrD+W1r1K6Vx7iNm+AQmETU1Xr2t+n8nzkV9t6xh3w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/chalk/-/chalk-5.0.1.tgz}
-    name: chalk
-    version: 5.0.1
-    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
     dev: false
 
   registry.npmmirror.com/chalk/5.2.0:

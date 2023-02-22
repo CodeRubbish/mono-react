@@ -9,13 +9,8 @@ export const commonConfig: Configuration = {
         chunkFilename: "chunk.[name].js",
         filename: "[name].js",
     },
-    plugins:[
-        new WebpackBar(),
-    ],
     resolve: {
         extensions: ['.ts', '.tsx', '...'],
     },
 };
-export const commonLoaders={
-
-}
+export const commonLoaders = {};
