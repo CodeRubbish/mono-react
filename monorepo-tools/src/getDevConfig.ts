@@ -1,13 +1,12 @@
 import {Configuration} from "webpack";
 import ReactRefreshPlugin from "@pmmmwh/react-refresh-webpack-plugin";
-import {WebpackConfiguration} from "webpack-cli";
 import path from "path";
 import {isApplication} from "./scan";
 import {merge} from "webpack-merge";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 
 const root = process.cwd();
-const commonConfig: WebpackConfiguration = {
+const commonConfig: Configuration = {
     mode: "development",
     devtool: "eval-cheap-module-source-map",
     output: {
@@ -17,6 +16,27 @@ const commonConfig: WebpackConfiguration = {
     },
     resolve: {
         extensions: ['.ts', '.tsx', '...'],
+    },
+};
+const normalConfig: Configuration = {
+    module: {
+        rules: [
+            {
+                oneOf: [
+                    {
+                        test: /\.less$/,
+                        use: [],
+                    },
+                    {
+                        test: /\.scss$/,
+                        use: [],
+                    },
+                    {
+
+                    }
+                ]
+            }
+        ]
     },
 };
 const generateConfig = project => {
