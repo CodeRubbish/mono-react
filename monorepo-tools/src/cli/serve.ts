@@ -7,6 +7,10 @@ const DEFAULT_ROOT_DIR = 'packages';
 export default function serve(options) {
     const {unify, prod, project, config} = options;
     const serveConfig = readConfig(config);
+    if (unify !== undefined) {
+        // cli 中的优先级更高
+        serveConfig.unify = unify;
+    }
     const rootPath = serveConfig.rootDir || DEFAULT_ROOT_DIR;
     const projects = scanProject(rootPath, serveConfig);
     let serveProjects = projects;// 默认启动所有项目
@@ -23,5 +27,5 @@ export default function serve(options) {
         log.error('there are no project to run,please make sure you have any project or specify the right project name');
         process.exit(2);
     }
-    const projectWebpackConfig = readWebpackConfigFromProject(serveProjects, serveConfig, projects);
+    const projectWebpackConfig = readWebpackConfigFromProject(serveProjects, serveConfig, projects, prod);
 };

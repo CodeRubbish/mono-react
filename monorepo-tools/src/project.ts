@@ -17,11 +17,11 @@ export default class Project {
         this.entry = entry;
     }
 
-    isApplication(project) {
+    isApplication() {
         return this.type === ProjectType.Application;
     }
 
-    isLib(project) {
+    isLibrary() {
         return this.type === ProjectType.Library;
     }
 }
