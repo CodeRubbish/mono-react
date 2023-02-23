@@ -10,7 +10,7 @@ export default function readExposesFromProject(project: Project) {
         const files = fs.readdirSync(exposes, {withFileTypes: true});
         files.forEach(file => {
             if (!file.isFile()) return log.warn(`exposes will only scan for file,${file.name} will be ignore`);
-            res[file.name] = `./exposes/${file.name}`;
+            res[`./${file.name.split('.')[0]}`] = `./exposes/${file.name}`;
         });
         return res;
     }

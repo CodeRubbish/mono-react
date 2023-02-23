@@ -76,7 +76,6 @@ function readConfigFromProject(projects, ports) {
             remotes[project.name] = `${project.name}@http://localhost:${ports[index]}/remoteEntry.js`;
         }
     });
-    console.log(remotes);
     const shared = require(path.resolve(root, 'package.json')).dependencies;
     for (const project of projects) {
         let config = getDevConfig(project);

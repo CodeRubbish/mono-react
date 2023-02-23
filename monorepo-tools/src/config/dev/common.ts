@@ -16,9 +16,13 @@ const oneOfLoader = [
                         'react-refresh/babel'
                     ]
                 }
-            }
+            },
         ]
     },
+    {
+        test: /\.html$/,
+        loader: require.resolve('html-loader')
+    }
 ];
 export const commonConfig: Configuration = {
     mode: "development",
@@ -37,4 +41,3 @@ export const commonConfig: Configuration = {
         extensions: ['.ts', '.tsx', '...'],
     },
 };
-export const commonLoaders = {};

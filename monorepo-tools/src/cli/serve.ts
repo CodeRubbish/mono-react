@@ -2,15 +2,15 @@ import scanProject from "../utils/scanProject";
 import readConfig from "../utils/readConfig";
 import log from "../utils/log";
 import readWebpackConfigFromProject from "../utils/readWebpackConfigFromProject";
+import getPorts from "../utils/getPorts";
+import webpack from "webpack";
+import WebpackDevServer from "webpack-dev-server";
+import {server} from "./server";
 
 const DEFAULT_ROOT_DIR = 'packages';
-export default function serve(options) {
+export default async function serve(options) {
     const {unify, prod, project, config} = options;
     const serveConfig = readConfig(config);
-    if (unify !== undefined) {
-        // cli 中的优先级更高
-        serveConfig.unify = unify;
-    }
     const rootPath = serveConfig.rootDir || DEFAULT_ROOT_DIR;
     const projects = scanProject(rootPath, serveConfig);
     let serveProjects = projects;// 默认启动所有项目
@@ -27,6 +27,22 @@ export default function serve(options) {
         log.error('there are no project to run,please make sure you have any project or specify the right project name');
         process.exit(2);
     }
-    const projectWebpackConfig = readWebpackConfigFromProject(serveProjects, serveConfig, projects, prod);
-    console.log(projectWebpackConfig);
+    let ports;
+    if (unify) {
+        // 所有都在一个端口启动时候，只获取一个端口
+        ports = await getPorts(unify ? 1 : serveProjects.length);
+    }
+    const projectWebpackConfig = readWebpackConfigFromProject(serveProjects, serveConfig, projects, prod, ports);
+    if (unify) {
+        console.log(projectWebpackConfig[0]);
+        const compiler = webpack(projectWebpackConfig[0]);
+        // return compiler.run(() => {
+        // });
+        server(compiler, ports[0]);
+    }
+};
+const runServer = async (server, name = '') => {
+    console.log('正在启动应用：' + name);
+    await server.start();
+    console.log('启动应用成功：' + name);
 };

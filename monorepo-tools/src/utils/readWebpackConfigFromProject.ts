@@ -5,6 +5,10 @@ import {getCommonCfg} from "../config";
 import {merge} from "webpack-merge";
 import readSharedFromRoot from "./readSharedFromRoot";
 import readExposesFromProject from "./readExposesFromProject";
+import path from "path";
+import fs from "fs";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import {program} from 'commander';
 
 const {ModuleFederationPlugin} = webpack.container;
 /**
@@ -13,56 +17,70 @@ const {ModuleFederationPlugin} = webpack.container;
  * @param serveConfig 用户设置的配置
  * @param all 所有应用
  * @param isProd
+ * @param ports
  */
-export default function readWebpackConfigFromProject(runs: Project[], serveConfig, all, isProd) {
+export default function readWebpackConfigFromProject(runs: Project[], serveConfig, all, isProd, ports) {
     const webpackConfigs = [];
     const remotes = {};
 
-    runs.forEach(project => {
-        let wpc;
-        if (project.isApplication()) {
-            wpc = readAppWebpackConfig(project, remotes, serveConfig[project.name]?.webpack, isProd);
-        } else if (project.isLibrary()) {
-            wpc = readLibWebpackConfig(project, remotes, serveConfig[project.name]?.webpack, isProd);
-        } else {
-            log.error('incorrect application type,this is internal error,issue please');
-            process.exit(2);
-        }
+    runs.forEach((project, index) => {
+        const wpc = readWebpackConfig(project, remotes, serveConfig[project.name]?.webpack, isProd, ports[index] || ports[0], ports.length === 1);
         webpackConfigs.push(wpc);
     });
+    console.log('remotes', remotes);
     return webpackConfigs;
 }
 
-function readAppWebpackConfig(project, remotes, configFilePath, isProd): Configuration {
+function readWebpackConfig(project: Project, remotes, configFilePath, isProd, port, unify): Configuration {
     const commonConfig = getCommonCfg(isProd);
     const mfp: any = {
         name: project.name,
-        remotes: remotes
+        remotes: remotes,
+        filename: 'remoteEntry.js',
     };
     const exposes = readExposesFromProject(project);
     if (exposes) {
         mfp.exposes = exposes;
+        const remotePath = `http://localhost:${port}/remoteEntry.js`;
+        remotes[project.name] = `${project.name}@${remotePath}`;
     }
     const shared = readSharedFromRoot();
     if (remotes) {
         mfp.shared = shared;
     }
-    return merge(commonConfig, {plugins: [new ModuleFederationPlugin(mfp)]});
+    const webpackConfig: Configuration = {
+        context: project.projectRootPath,
+        entry: project.entry,
+        output: {
+            path: unify ? path.resolve(process.cwd(), 'dist', project.name) : path.resolve(project.projectRootPath, 'dist'),
+        },
+        ...((project.isApplication() ? readAppWebpackCfg : readLibWebpackCfg)(project))
+    };
+    let customWebpackConfig = {};
+    if (typeof configFilePath !== "undefined") {
+        const customCfgPath = path.resolve(project.projectRootPath, configFilePath);
+        if (!fs.existsSync(customCfgPath)) {
+            log.warn(`config file${customCfgPath} for ${project.name} does not exist `);
+        } else {
+            customWebpackConfig = require(customCfgPath);
+        }
+    }
+
+    return merge(commonConfig, webpackConfig, customWebpackConfig, {plugins: [new ModuleFederationPlugin(mfp)]});
 }
 
-function readLibWebpackConfig(project, remotes, configFilePath, isProd): Configuration {
-    const commonConfig = getCommonCfg(isProd);
-    const mfp: any = {
-        name: project.name,
-        remotes: remotes
+function readAppWebpackCfg(project): Configuration {
+    const config: Configuration = {
+        plugins: [
+            new HtmlWebpackPlugin({
+                template: project.htmlTemplate
+            })
+        ]
     };
-    const exposes = readExposesFromProject(project);
-    if (exposes) {
-        mfp.exposes = exposes;
-    }
-    const shared = readSharedFromRoot();
-    if (remotes) {
-        mfp.shared = shared;
-    }
-    return merge(commonConfig, {plugins: [new ModuleFederationPlugin(mfp)]});
+    return config;
+}
+
+function readLibWebpackCfg(project) {
+    const config: Configuration = {};
+    return config;
 }
