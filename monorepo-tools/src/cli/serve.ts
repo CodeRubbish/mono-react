@@ -35,10 +35,16 @@ export default async function serve(options) {
     const projectWebpackConfig = readWebpackConfigFromProject(serveProjects, serveConfig, projects, prod, ports);
     if (unify) {
         console.log(projectWebpackConfig[0]);
-        const compiler = webpack(projectWebpackConfig[0]);
-        // return compiler.run(() => {
-        // });
-        server(compiler, ports[0]);
+        const compiler = webpack(projectWebpackConfig);
+        const server = new WebpackDevServer({
+            port: ports[0],
+            hot: true,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Method": "GET"
+            }
+        }, compiler);
+        runServer(server).catch(() => console.log('应用启动失败'));
     }
 };
 const runServer = async (server, name = '') => {

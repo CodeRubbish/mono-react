@@ -9,6 +9,7 @@ import path from "path";
 import fs from "fs";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import {program} from 'commander';
+import ReactRefreshPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 
 const {ModuleFederationPlugin} = webpack.container;
 /**
@@ -74,7 +75,8 @@ function readAppWebpackCfg(project): Configuration {
         plugins: [
             new HtmlWebpackPlugin({
                 template: project.htmlTemplate
-            })
+            }),
+            new ReactRefreshPlugin(),
         ]
     };
     return config;
