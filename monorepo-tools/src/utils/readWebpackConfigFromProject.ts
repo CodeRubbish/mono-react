@@ -40,7 +40,6 @@ function readAppWebpackConfig(project, remotes, configFilePath, isProd): Configu
         remotes: remotes
     };
     const exposes = readExposesFromProject(project);
-    console.log(exposes);
     if (exposes) {
         mfp.exposes = exposes;
     }
@@ -48,7 +47,7 @@ function readAppWebpackConfig(project, remotes, configFilePath, isProd): Configu
     if (remotes) {
         mfp.shared = shared;
     }
-    return merge(commonConfig);
+    return merge(commonConfig, {plugins: [new ModuleFederationPlugin(mfp)]});
 }
 
 function readLibWebpackConfig(project, remotes, configFilePath, isProd): Configuration {
