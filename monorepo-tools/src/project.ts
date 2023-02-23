@@ -12,9 +12,11 @@ export default class Project {
     type: ProjectType; // 项目类型
     name: string; // 项目名称
     entry: string; // 项目的入口文件
-    constructor(name, entry) {
+    projectRootPath: string; // 项目根路径
+    constructor(name, entry, projectRootPath) {
         this.name = name;
         this.entry = entry;
+        this.projectRootPath = projectRootPath;
     }
 
     isApplication() {
@@ -29,8 +31,8 @@ export default class Project {
 export class AppProject extends Project {
     type = ProjectType.Application;
     htmlTemplate: string; // 应用的Html模板
-    constructor(name, entry, htmlTemplate) {
-        super(name, entry);
+    constructor(name, entry, projectRootPath, htmlTemplate) {
+        super(name, entry, projectRootPath);
         this.htmlTemplate = htmlTemplate;
     }
 }

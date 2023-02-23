@@ -1,6 +1,25 @@
 import {Configuration} from "webpack";
-import WebpackBar from "webpackbar";
 
+const oneOfLoader = [
+    {
+        test: /\.tsx?$/,
+        use: [
+            {
+                loader: 'babel-loader',
+                options: {
+                    presets: [
+                        '@babel/preset-env',
+                        '@babel/preset-react',
+                        '@babel/preset-typescript',
+                    ],
+                    plugins: [
+                        'react-refresh/babel'
+                    ]
+                }
+            }
+        ]
+    },
+];
 export const commonConfig: Configuration = {
     mode: "development",
     devtool: "eval-cheap-module-source-map",
@@ -8,6 +27,11 @@ export const commonConfig: Configuration = {
         clean: true,
         chunkFilename: "chunk.[name].js",
         filename: "[name].js",
+    },
+    module: {
+        rules: [
+            {oneOf: oneOfLoader}
+        ]
     },
     resolve: {
         extensions: ['.ts', '.tsx', '...'],

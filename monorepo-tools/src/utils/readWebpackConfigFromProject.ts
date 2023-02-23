@@ -1,7 +1,12 @@
 import Project from "../project";
-import {Configuration} from "webpack";
+import webpack, {Configuration} from "webpack";
 import log from "./log";
+import {getCommonCfg} from "../config";
+import {merge} from "webpack-merge";
+import readSharedFromRoot from "./readSharedFromRoot";
+import readExposesFromProject from "./readExposesFromProject";
 
+const {ModuleFederationPlugin} = webpack.container;
 /**
  * 读取项目的webpack的配置文件
  * @param runs 需要运行的应用
@@ -29,7 +34,21 @@ export default function readWebpackConfigFromProject(runs: Project[], serveConfi
 }
 
 function readAppWebpackConfig(project, remotes, configFilePath, isProd): Configuration {
-    return {};
+    const commonConfig = getCommonCfg(isProd);
+    const mfp: any = {
+        name: project.name,
+        remotes: remotes
+    };
+    const exposes = readExposesFromProject(project);
+    console.log(exposes);
+    if (exposes) {
+        mfp.exposes = exposes;
+    }
+    const shared = readSharedFromRoot();
+    if (remotes) {
+        mfp.shared = shared;
+    }
+    return merge(commonConfig);
 }
 
 function readLibWebpackConfig(project, remotes, configFilePath, isProd): Configuration {

@@ -19,18 +19,21 @@ export default function scanProject(projectRootPath, config) {
 
 function readProjectConfig(project, config) {
     const {name} = project;
-    const entry = analysisEntry(name, config[name]);
+    const prp = path.resolve(root, 'packages', name);
+    const entry = analysisEntry(name, config[name], prp);
     if (!entry) return null; // 无项目入口文件，放弃
-    const html = analysisHtml(name, config[name]);
-    return html ? new AppProject(name, entry, html) : new LibProject(name, entry);
+    const html = analysisHtml(name, config[name], prp);
+    return html ? new AppProject(name, entry, prp, html) : new LibProject(name, entry, prp);
 }
 
 /**
  * 判断项目入口是否存在，如果存在则返回入口，否则返回undefined;
  * @param projectName
+ * @param config
+ * @param projectRootPath
  */
-function analysisEntry(projectName, config) {
-    const entry = config?.entry || path.resolve(root, 'packages', projectName, 'src', 'index.ts');
+function analysisEntry(projectName, config, projectRootPath) {
+    const entry = config?.entry || path.resolve(projectRootPath, 'src', 'index.ts');
     if (fs.existsSync(entry)) {
         return entry;
     }
@@ -39,9 +42,11 @@ function analysisEntry(projectName, config) {
 /**
  * 根据项目名称分析项目类型
  * @param projectName
+ * @param config
+ * @param projectRootPath
  */
-function analysisHtml(projectName, config) {
-    const html = config?.htmlTemplate || path.resolve(root, 'packages', projectName, 'public', 'index.html');
+function analysisHtml(projectName, config, projectRootPath) {
+    const html = config?.htmlTemplate || path.resolve(projectRootPath, 'public', 'index.html');
     if (fs.existsSync(html)) {
         return html;
     } else {
