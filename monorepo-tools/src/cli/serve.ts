@@ -28,4 +28,5 @@ export default function serve(options) {
         process.exit(2);
     }
     const projectWebpackConfig = readWebpackConfigFromProject(serveProjects, serveConfig, projects, prod);
+    console.log(projectWebpackConfig);
 };

@@ -12,9 +12,9 @@ const DEFAULT_SINGLETON = ['react', 'react-dom'];
 
 function readSharedFromRootImpl() {
     const dependencies = require(rootPath).dependencies;
-    const shared = [];
+    const shared = {};
     Object.keys(dependencies).forEach(dep => {
-        shared.push({
+        shared[dep] = ({
             import: dep,
             requiredVersion: dependencies[dep],
             singleton: DEFAULT_SINGLETON.includes(dep)
