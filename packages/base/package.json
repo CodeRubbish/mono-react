@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "monorepo-main": true,
+  "deploy": {
+    "url": "https://online.com"
+  },
   "dependencies": {
     "axios": "0.24.0",
     "i18next": "19.9.2",

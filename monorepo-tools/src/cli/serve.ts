@@ -41,7 +41,7 @@ export default async function serve(options) {
             magicHtml: true,
             static: path.resolve(process.cwd(), 'dist'),
         }, compiler);
-        runServer(server, '').catch(() => console.log('应用启动失败：'));
+        runServer(server, '').catch((e) => console.log('应用启动失败：',e));
     }
 };
 const runServer = async (server, name = '') => {
