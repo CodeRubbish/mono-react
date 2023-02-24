@@ -5,7 +5,7 @@ import readWebpackConfigFromProject from "../utils/readWebpackConfigFromProject"
 import getPorts from "../utils/getPorts";
 import webpack from "webpack";
 import WebpackDevServer from "webpack-dev-server";
-import {server} from "./server";
+import path from "path";
 
 const DEFAULT_ROOT_DIR = 'packages';
 export default async function serve(options) {
@@ -29,22 +29,19 @@ export default async function serve(options) {
     }
     let ports;
     if (unify) {
-        // 所有都在一个端口启动时候，只获取一个端口
+        // 所有项目都在一个端口启动时候，只获取一个端口
         ports = await getPorts(unify ? 1 : serveProjects.length);
     }
     const projectWebpackConfig = readWebpackConfigFromProject(serveProjects, serveConfig, projects, prod, ports);
     if (unify) {
-        console.log(projectWebpackConfig[0]);
         const compiler = webpack(projectWebpackConfig);
         const server = new WebpackDevServer({
             port: ports[0],
             hot: true,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Method": "GET"
-            }
+            magicHtml: true,
+            static: path.resolve(process.cwd(), 'dist'),
         }, compiler);
-        runServer(server).catch(() => console.log('应用启动失败'));
+        runServer(server, '').catch(() => console.log('应用启动失败：'));
     }
 };
 const runServer = async (server, name = '') => {

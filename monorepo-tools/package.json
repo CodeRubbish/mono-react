@@ -27,6 +27,7 @@
     "webpack-merge": "^5.8.0",
     "webpackbar": "^5.0.2",
     "inquirer": "^9.1.4",
+    "@module-federation/fmr": "^0.0.7",
     "tslib": "2.4.1"
   },
   "devDependencies": {

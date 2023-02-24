@@ -1,3 +1,7 @@
 export function add(a, b) {
-    return a + b + 4;
+    return a + b;
+}
+
+export function tt(a, b) {
+    return a * b;
 }

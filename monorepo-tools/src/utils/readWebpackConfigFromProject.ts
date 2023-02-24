@@ -42,7 +42,7 @@ function readWebpackConfig(project: Project, remotes, configFilePath, isProd, po
     const exposes = readExposesFromProject(project);
     if (exposes) {
         mfp.exposes = exposes;
-        const remotePath = `http://localhost:${port}/remoteEntry.js`;
+        const remotePath = `http://localhost:${port}/${project.name}/remoteEntry.js`;
         remotes[project.name] = `${project.name}@${remotePath}`;
     }
     const shared = readSharedFromRoot();
@@ -54,6 +54,7 @@ function readWebpackConfig(project: Project, remotes, configFilePath, isProd, po
         entry: project.entry,
         output: {
             path: unify ? path.resolve(process.cwd(), 'dist', project.name) : path.resolve(project.projectRootPath, 'dist'),
+            publicPath: unify ? `/${project.name}/` : '/'
         },
         ...((project.isApplication() ? readAppWebpackCfg : readLibWebpackCfg)(project))
     };
