@@ -7,6 +7,12 @@
     "resolveJsonModule": true,
     "jsx": "react",
     "paths": {
+      "base/*": [
+        "base/exposes/*"
+      ],
+      "app/*": [
+        "app/exposes/*"
+      ],
       "utils/*": [
         "utils/exposes/*"
       ]

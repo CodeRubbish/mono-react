@@ -20,5 +20,6 @@ function readSharedFromRootImpl() {
             singleton: DEFAULT_SINGLETON.includes(dep)
         });
     });
+    console.log('shared', shared);
     return shared;
 }

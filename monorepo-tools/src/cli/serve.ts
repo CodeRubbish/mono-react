@@ -33,6 +33,7 @@ export default async function serve(options) {
         ports = await getPorts(unify ? 1 : serveProjects.length);
     }
     const projectWebpackConfig = readWebpackConfigFromProject(serveProjects, serveConfig, projects, prod, ports);
+    console.log(projectWebpackConfig);
     if (unify) {
         const compiler = webpack(projectWebpackConfig);
         const server = new WebpackDevServer({
@@ -41,7 +42,7 @@ export default async function serve(options) {
             magicHtml: true,
             static: path.resolve(process.cwd(), 'dist'),
         }, compiler);
-        runServer(server, '').catch((e) => console.log('应用启动失败：',e));
+        runServer(server, '').catch((e) => console.log('应用启动失败：', e));
     }
 };
 const runServer = async (server, name = '') => {

@@ -25,15 +25,17 @@ export default function readWebpackConfigFromProject(runs: Project[], serveConfi
     const remotes = {};
 
     runs.forEach((project, index) => {
-        const wpc = readWebpackConfig(project, remotes, serveConfig[project.name]?.webpack, isProd, ports[index] || ports[0], ports.length === 1);
+        const wpc = readWebpackConfig(project, remotes, serveConfig[project.name], isProd, ports[index] || ports[0], ports.length === 1);
         webpackConfigs.push(wpc);
     });
     console.log('remotes', remotes);
     return webpackConfigs;
 }
 
-function readWebpackConfig(project: Project, remotes, configFilePath, isProd, port, unify): Configuration {
+function readWebpackConfig(project: Project, remotes, config, isProd, port, unify): Configuration {
     const commonConfig = getCommonCfg(isProd);
+    const configFilePath = config?.webpack;
+    const isRootApp = Boolean(config?.root && project.isApplication());
     const mfp: any = {
         name: project.name,
         remotes: remotes,
@@ -42,7 +44,7 @@ function readWebpackConfig(project: Project, remotes, configFilePath, isProd, po
     const exposes = readExposesFromProject(project);
     if (exposes) {
         mfp.exposes = exposes;
-        const remotePath = `http://localhost:${port}/${project.name}/remoteEntry.js`;
+        const remotePath = isRootApp ? `http://localhost:${port}/remoteEntry.js` : `http://localhost:${port}/${project.name}/remoteEntry.js`;
         remotes[project.name] = `${project.name}@${remotePath}`;
     }
     const shared = readSharedFromRoot();
@@ -53,8 +55,8 @@ function readWebpackConfig(project: Project, remotes, configFilePath, isProd, po
         context: project.projectRootPath,
         entry: project.entry,
         output: {
-            path: unify ? path.resolve(process.cwd(), 'dist', project.name) : path.resolve(project.projectRootPath, 'dist'),
-            publicPath: unify ? `/${project.name}/` : '/'
+            path: unify && !isRootApp ? path.resolve(process.cwd(), 'dist', project.name) : path.resolve(project.projectRootPath, 'dist'),
+            publicPath: unify && !isRootApp ? `/${project.name}/` : '/'
         },
         ...((project.isApplication() ? readAppWebpackCfg : readLibWebpackCfg)(project))
     };

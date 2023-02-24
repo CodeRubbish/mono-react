@@ -3,6 +3,10 @@ import fs from "fs";
 import Project from "../project";
 import log from "./log";
 
+/**
+ * 以每个项目的exposes为基准读取共享文件
+ * @param project
+ */
 export default function readExposesFromProject(project: Project) {
     const exposes = path.resolve(project.projectRootPath, 'exposes');
     const res = {};
