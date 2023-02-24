@@ -1,24 +1,9 @@
 import {Configuration, RuleSetRule} from "webpack";
 
+const genericName = require("generic-names");
+const generateRule = "[path]___[name]__[local]___[hash:base64:5]";
+
 const oneOfLoader: RuleSetRule[] = [
-    {
-        test: /\.tsx?$/,
-        use: [
-            {
-                loader: require.resolve('babel-loader'),
-                options: {
-                    presets: [
-                        '@babel/preset-env',
-                        '@babel/preset-react',
-                        '@babel/preset-typescript',
-                    ],
-                    plugins: [
-                        'react-refresh/babel'
-                    ]
-                }
-            },
-        ]
-    },
     {
         test: /\.(le|c)ss$/,
         use: [
@@ -28,7 +13,11 @@ const oneOfLoader: RuleSetRule[] = [
                 options: {
                     importLoaders: 2,
                     modules: {
-                        auto: true // 自动开启模块化
+                        auto: true, // 自动开启模块化,
+                        getLocalIdent: (context, localIdentName, localName, options) => {
+                            const {resourcePath, rootContext} = context;
+                            return genericName(generateRule, {context: rootContext})(localName, resourcePath);
+                        },
                     }
                 },
             },
@@ -40,7 +29,7 @@ const oneOfLoader: RuleSetRule[] = [
                             [
                                 "postcss-preset-env",
                                 {
-                                   // Options
+                                    // Options
                                 },
                             ],
                         ],

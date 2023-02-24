@@ -10,6 +10,9 @@
     "build": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "peerDependencies": {
+    "babel-plugin-react-css-modules": "^5.2.6"
+  },
   "dependencies": {
     "babel-loader": "^9.1.2",
     "@babel/core": "^7.20.12",
@@ -37,7 +40,6 @@
     "postcss-loader": "^7.0.2",
     "postcss-preset-env": "^8.0.1",
     "mini-css-extract-plugin": "^2.7.2",
-    "babel-plugin-react-css-modules": "^5.2.6",
     "eslint-webpack-plugin": "^4.0.0",
     "stylelint-webpack-plugin": "^4.1.0",
     "@module-federation/fmr": "^0.0.7"
