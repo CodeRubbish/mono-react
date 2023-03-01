@@ -8,18 +8,9 @@ import WebpackDevServer from "webpack-dev-server";
 import path from "path";
 import {OUTPUT_DIRECTORY_DEFAULT} from "../const";
 import process from "process";
+import type {IConfig, IOptions} from "../types/interface";
 
 const DEFAULT_ROOT_DIR = 'packages';
-
-interface IOptions {
-    unify: boolean | number; // 是否以单个端口模式启动，为number时候为指定端口号
-    prod: boolean; // 是否以生产模式启动，便于调试线上环境异常，由于生产模式启用content hash，所以默认关闭热更新
-    project: string;// 指定启动项目列表，可仅启动指定项目，其余项目采用线上的远端模块地址
-    config: IConfig; // 配置项
-}
-
-interface IConfig {
-}
 
 /**
  * 启动一个指定项目
@@ -27,7 +18,7 @@ interface IConfig {
  */
 export default async function serve(options: IOptions) {
     const {unify, prod, project, config} = options;
-    const serveConfig = readConfig(config);
+    const serveConfig: IConfig = readConfig(config);
     const rootPath = serveConfig.rootDir || DEFAULT_ROOT_DIR;
     const projects = scanProject(rootPath, serveConfig);
     let serveProjects = projects;// 默认启动所有项目

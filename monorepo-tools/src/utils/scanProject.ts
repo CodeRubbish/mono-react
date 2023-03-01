@@ -1,15 +1,17 @@
 import fs from 'fs';
 import path from "path";
-import {AppProject, LibProject} from "../project";
+import Project, {AppProject, LibProject} from "../project";
 import isProject from "./isProject";
 import {ROOT_PATH} from "../const";
+import {IConfig} from "../types/interface";
+import {Configuration} from "webpack";
 
 /**
  * 扫描根路径下的所有项目
  * @param projectRootPath
  * @param config
  */
-export default function scanProject(projectRootPath, config) {
+export default function scanProject(projectRootPath: string, config: IConfig) {
     if (!projectRootPath) {
         projectRootPath = path.resolve(ROOT_PATH, 'packages');
     }
@@ -29,9 +31,9 @@ export default function scanProject(projectRootPath, config) {
     return projects.map(project => readProjectConfig(project, projectRootPath, config, alias)).filter(i => i);
 }
 
-function readProjectConfig(project, projectRootPath, config, alias) {
+function readProjectConfig(project: Project, projectRootPath: string, config: IConfig, alias: Configuration['resolve']['alias']) {
     const {name} = project;
-    const prp = path.resolve(ROOT_PATH, projectRootPath, name);// project root path
+    const prp = path.resolve(projectRootPath, name);// project root path
     const entry = analysisEntry(name, config[name], prp);
     if (!entry) return null; // 无项目入口文件，放弃
     const html = analysisHtml(name, config[name], prp);

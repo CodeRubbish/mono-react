@@ -9,6 +9,7 @@ import path from "path";
 import fs from "fs";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import {OUTPUT_DIRECTORY_DEFAULT, ROOT_PATH} from "../const";
+import {IConfig, IProject} from "../types/interface";
 
 const {ModuleFederationPlugin} = webpack.container;
 /**
@@ -19,7 +20,7 @@ const {ModuleFederationPlugin} = webpack.container;
  * @param isProd
  * @param ports
  */
-export default function readWebpackConfigFromProject(runs: Project[], serveConfig, all, isProd, ports) {
+export default function readWebpackConfigFromProject(runs: Project[], serveConfig: IConfig, all, isProd, ports) {
     const webpackConfigs = [];
     const remotes = {};
 
@@ -31,7 +32,7 @@ export default function readWebpackConfigFromProject(runs: Project[], serveConfi
     return webpackConfigs;
 }
 
-function readWebpackConfig(project: Project, remotes, config, isProd, port, unify): Configuration {
+function readWebpackConfig(project: Project, remotes: Record<string, string>, config: IProject, isProd, port, unify): Configuration {
     const commonConfig = getCommonCfg(isProd)(project.projectRootPath);
     const configFilePath = config?.webpack;
     const isRootApp = Boolean(config?.root && project.isApplication());
