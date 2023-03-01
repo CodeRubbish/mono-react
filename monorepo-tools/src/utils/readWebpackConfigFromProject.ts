@@ -31,7 +31,7 @@ export default function readWebpackConfigFromProject(runs: Project[], serveConfi
 }
 
 function readWebpackConfig(project: Project, remotes, config, isProd, port, unify): Configuration {
-    const commonConfig = getCommonCfg(isProd);
+    const commonConfig = getCommonCfg(isProd)(project.projectRootPath);
     const configFilePath = config?.webpack;
     const isRootApp = Boolean(config?.root && project.isApplication());
     const mfp: any = {
@@ -50,7 +50,6 @@ function readWebpackConfig(project: Project, remotes, config, isProd, port, unif
         mfp.shared = shared;
     }
     const webpackConfig: Configuration = {
-        context: project.projectRootPath,
         entry: project.entry,
         output: {
             path: unify && !isRootApp ? path.resolve(process.cwd(), 'dist', project.name) : path.resolve(project.projectRootPath, 'dist'),

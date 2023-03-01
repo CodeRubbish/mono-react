@@ -1,6 +1,6 @@
 import {Configuration} from "webpack";
 
-export const commonConfig: Configuration = {
+export const commonConfig: (context: string) => Configuration = (context: string) => ({
     mode: "production",
     devtool: "source-map",
     output: {
@@ -11,4 +11,4 @@ export const commonConfig: Configuration = {
     resolve: {
         extensions: ['.ts', '.tsx', '...'],
     },
-};
+});

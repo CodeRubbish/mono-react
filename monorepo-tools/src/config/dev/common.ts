@@ -4,7 +4,7 @@ import ReactRefreshPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 const genericName = require("generic-names");
 const generateRule = "[name]__[local]___[hash:base64:8]";
 
-const oneOfLoader: RuleSetRule[] = [
+const oneOfLoader: (context) => RuleSetRule[] = (context) => [
     {
         test: /\.tsx?$/,
         exclude: /[\\/]node_modules[\\/]/,
@@ -27,7 +27,8 @@ const oneOfLoader: RuleSetRule[] = [
                         "@babel/plugin-transform-runtime",
                         [
                             'babel-plugin-react-css-modules', {
-                            "generateScopedName": generateRule
+                            "generateScopedName": generateRule,
+                            context,
                         }
                         ],
                     ]
@@ -46,7 +47,7 @@ const oneOfLoader: RuleSetRule[] = [
                     importLoaders: 2,
                     modules: {
                         auto: true, // 自动开启模块化,
-                        getLocalIdent: (context, localIdentName, localName, options) => {
+                        getLocalIdent: (context, localIdentName, localName) => {
                             const {resourcePath, rootContext} = context;
                             return genericName(generateRule, {context: rootContext})(localName, resourcePath);
                         },
@@ -97,8 +98,9 @@ const oneOfLoader: RuleSetRule[] = [
         loader: require.resolve('html-loader')
     }
 ];
-export const commonConfig: Configuration = {
+export const commonConfig: (context) => Configuration = (context) => ({
     mode: "development",
+    context: context,
     devtool: "eval-cheap-module-source-map",
     output: {
         clean: true,
@@ -107,7 +109,7 @@ export const commonConfig: Configuration = {
     },
     module: {
         rules: [
-            {oneOf: oneOfLoader}
+            {oneOf: oneOfLoader(context)}
         ]
     },
     plugins: [
@@ -116,4 +118,4 @@ export const commonConfig: Configuration = {
     resolve: {
         extensions: ['.ts', '.tsx', '...'],
     },
-};
+});
