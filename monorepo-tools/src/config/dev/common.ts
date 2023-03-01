@@ -1,11 +1,42 @@
 import {Configuration, RuleSetRule} from "webpack";
+import ReactRefreshPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 
 const genericName = require("generic-names");
-const generateRule = "[path]___[name]__[local]___[hash:base64:5]";
+const generateRule = "[name]__[local]___[hash:base64:8]";
 
 const oneOfLoader: RuleSetRule[] = [
     {
+        test: /\.tsx?$/,
+        exclude: /[\\/]node_modules[\\/]/,
+        use: [
+            {
+                loader: require.resolve('babel-loader'),
+                options: {
+                    presets: [
+                        [
+                            '@babel/preset-env', {
+                            useBuiltIns: "usage",
+                        }
+                        ],
+                        '@babel/preset-react',
+                        '@babel/preset-typescript',
+                    ],
+                    plugins: [
+                        'react-refresh/babel',
+                        "@babel/plugin-transform-runtime",
+                        [
+                            'babel-plugin-react-css-modules', {
+                            "generateScopedName": generateRule
+                        }
+                        ],
+                    ]
+                }
+            },
+        ]
+    },
+    {
         test: /\.(le|c)ss$/,
+        exclude: /[\\/]node_modules[\\/]/,
         use: [
             require.resolve('style-loader'),
             {
@@ -78,6 +109,9 @@ export const commonConfig: Configuration = {
             {oneOf: oneOfLoader}
         ]
     },
+    plugins: [
+        new ReactRefreshPlugin(),
+    ],
     resolve: {
         extensions: ['.ts', '.tsx', '...'],
     },

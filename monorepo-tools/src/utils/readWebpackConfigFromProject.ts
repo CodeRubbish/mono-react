@@ -1,4 +1,4 @@
-import Project, {AppProject} from "../project";
+import Project from "../project";
 import webpack, {Configuration} from "webpack";
 import log from "./log";
 import {getCommonCfg} from "../config";
@@ -8,7 +8,6 @@ import readExposesFromProject from "./readExposesFromProject";
 import path from "path";
 import fs from "fs";
 import HtmlWebpackPlugin from "html-webpack-plugin";
-import ReactRefreshPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 
 const {ModuleFederationPlugin} = webpack.container;
 /**
@@ -74,39 +73,10 @@ function readWebpackConfig(project: Project, remotes, config, isProd, port, unif
 
 function readAppWebpackCfg(project): Configuration {
     const config: Configuration = {
-        module: {
-            rules: [
-                {
-                    test: /\.tsx?$/,
-                    use: [
-                        {
-                            loader: require.resolve('babel-loader'),
-                            options: {
-                                presets: [
-                                    '@babel/preset-env',
-                                    '@babel/preset-react',
-                                    '@babel/preset-typescript',
-                                ],
-                                plugins: [
-                                    'react-refresh/babel',
-                                    [
-                                        'babel-plugin-react-css-modules', {
-                                        context: project.projectRootPath,
-                                        "generateScopedName": "[path]___[name]__[local]___[hash:base64:5]"
-                                    }
-                                    ],
-                                ]
-                            }
-                        },
-                    ]
-                },
-            ]
-        },
         plugins: [
             new HtmlWebpackPlugin({
                 template: project.htmlTemplate
             }),
-            new ReactRefreshPlugin(),
         ]
     };
     return config;
