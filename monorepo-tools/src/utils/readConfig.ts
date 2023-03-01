@@ -2,21 +2,21 @@ import path from "path";
 import fs from "fs";
 import process from "process";
 import log from "./log";
+import {rootPath} from "../const";
 
-const cwd = process.cwd();
 const DEFAULT_CONFIG = 'monorepo-tools.config.js';
 export default function readConfig(config?) {
     // 尝试读取指定配置文件
     if (config) {
-        const config_file_path = path.resolve(cwd, config);
+        const config_file_path = path.resolve(rootPath, config);
         if (!fs.existsSync(config_file_path)) {
             log.error(`the config file ${config} does not exist`);
             process.exit(2);
         }
     } else {
         // 尝试读取默认配置文件
-        const config_file_path = path.resolve(cwd, DEFAULT_CONFIG);
-        if (fs.existsSync(path.resolve(cwd, DEFAULT_CONFIG))) {
+        const config_file_path = path.resolve(rootPath, DEFAULT_CONFIG);
+        if (fs.existsSync(path.resolve(rootPath, DEFAULT_CONFIG))) {
             // 如果默认文件存在，则读取返回默认文件
             return require(config_file_path);
         }

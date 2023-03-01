@@ -1,5 +1,7 @@
-import * as path from "path";
-import * as process from "process";
+import fs from "fs";
+import path from "path";
+import {PACKAGE_JSON, rootPath} from "../const";
+import log from "./log";
 
 let shared;
 
@@ -7,11 +9,15 @@ export default function readSharedFromRoot() {
     if (!shared) shared = readSharedFromRootImpl();
     return shared;
 }
-const rootPath = path.resolve(process.cwd(), 'package.json');
+const PACKAGE_JSON_PATH = path.resolve(rootPath, PACKAGE_JSON);
 const DEFAULT_SINGLETON = ['react', 'react-dom'];
 
 function readSharedFromRootImpl() {
-    const dependencies = require(rootPath).dependencies;
+    if (!fs.existsSync(PACKAGE_JSON_PATH)) {
+        log.warn(`the project do not share any dependency,please make sure.
+        if you want shared dependency between different project,create package.json in your project root path`);
+    }
+    const dependencies = require(PACKAGE_JSON_PATH)?.dependencies ?? {};
     const shared = {};
     Object.keys(dependencies).forEach(dep => {
         shared[dep] = ({

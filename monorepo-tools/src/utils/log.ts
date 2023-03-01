@@ -2,6 +2,6 @@ import chalk from 'chalk';
 
 const {log} = console;
 export default {
-    warn: (info) => log(chalk.bgYellowBright.black(' warn : ' + info)),
-    error: (info) => log(chalk.bgRed.black(' error : ' + info))
+    warn: (info, ...others) => log(chalk.bgYellowBright.black(' warn : ' + info), ...others),
+    error: (info, ...others) => log(chalk.bgRed.black(' error : ' + info), ...others)
 };
