@@ -77,12 +77,19 @@ function readAppWebpackCfg(project): Configuration {
             new HtmlWebpackPlugin({
                 template: project.htmlTemplate
             }),
-        ]
+        ],
+        resolve: {
+            alias: project.alias ?? {}
+        }
     };
     return config;
 }
 
 function readLibWebpackCfg(project) {
-    const config: Configuration = {};
+    const config: Configuration = {
+        resolve: {
+            alias: project.alias ?? {}
+        }
+    };
     return config;
 }

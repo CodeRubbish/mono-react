@@ -2,28 +2,42 @@ import * as fs from 'fs';
 import * as path from "path";
 import * as process from "process";
 import {AppProject, LibProject} from "../project";
+import isProject from "./isProject";
 
 const root = process.cwd();
 
 /**
  * 扫描根路径下的所有项目
  * @param projectRootPath
+ * @param config
  */
 export default function scanProject(projectRootPath, config) {
     if (!projectRootPath) {
-        projectRootPath = path.resolve(process.cwd(), 'packages');
+        projectRootPath = path.resolve(root, 'packages');
     }
-    const projects = fs.readdirSync(projectRootPath, {withFileTypes: true}).filter(dir => dir.isDirectory());
-    return projects.map(project => readProjectConfig(project, config)).filter(i => i);
+    const directories = fs.readdirSync(projectRootPath, {withFileTypes: true})
+        .filter(dir => dir.isDirectory());
+    const projects = [];
+    const alias = {};
+    directories.forEach(dir => {
+        if (isProject(dir, projectRootPath)) {
+            projects.push(dir);
+        } else {
+            alias[`@${dir.name}`] = path.resolve(projectRootPath, dir.name);
+        }
+    });
+    console.log('projects', projects);
+    console.log('alias for all', alias);
+    return projects.map(project => readProjectConfig(project, projectRootPath, config, alias)).filter(i => i);
 }
 
-function readProjectConfig(project, config) {
+function readProjectConfig(project, projectRootPath, config, alias) {
     const {name} = project;
-    const prp = path.resolve(root, 'packages', name);
+    const prp = path.resolve(root, projectRootPath, name);// project root path
     const entry = analysisEntry(name, config[name], prp);
     if (!entry) return null; // 无项目入口文件，放弃
     const html = analysisHtml(name, config[name], prp);
-    return html ? new AppProject(name, entry, prp, html) : new LibProject(name, entry, prp);
+    return html ? new AppProject(name, entry, prp, alias, html) : new LibProject(name, entry, prp, alias);
 }
 
 /**

@@ -63,6 +63,7 @@ importers:
       babel-loader: ^9.1.2
       chalk: ^4.0.0
       commander: ^9.4.1
+      core-js: ^3.29.0
       css-loader: ^6.7.3
       eslint: ^8.34.0
       eslint-webpack-plugin: ^4.0.0
@@ -97,6 +98,7 @@ importers:
       babel-loader: registry.npmmirror.com/babel-loader/9.1.2_fzlwazi7nboub3int6sfk7gbca
       chalk: registry.npmmirror.com/chalk/4.1.2
       commander: registry.npmmirror.com/commander/9.4.1
+      core-js: registry.npmmirror.com/core-js/3.29.0
       css-loader: registry.npmmirror.com/css-loader/6.7.3_webpack@5.74.0
       eslint: registry.npmmirror.com/eslint/8.34.0
       eslint-webpack-plugin: registry.npmmirror.com/eslint-webpack-plugin/4.0.0_hbuupkxlldbzeftago46qoigvi
@@ -5042,6 +5044,13 @@ packages:
     resolution: {integrity: sha512-qRbgm0ADrsNTU66UcW47YMJjXm+ShhUP2gkoEoAShT2BHO3cb5gGqLtmWpjnM6Wx9h5hMSF4uZ+jEV/8+4KCsw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/core-js-pure/-/core-js-pure-3.25.4.tgz}
     name: core-js-pure
     version: 3.25.4
+    requiresBuild: true
+    dev: false
+
+  registry.npmmirror.com/core-js/3.29.0:
+    resolution: {integrity: sha512-VG23vuEisJNkGl6XQmFJd3rEG/so/CNatqeE+7uZAwTSwFeB/qaO0be8xZYUNWprJ/GIwL8aMt9cj1kvbpTZhg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/core-js/-/core-js-3.29.0.tgz}
+    name: core-js
+    version: 3.29.0
     requiresBuild: true
     dev: false
 
