@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import {PACKAGE_JSON, rootPath} from "../const";
+import {PACKAGE_JSON, ROOT_PATH} from "../const";
 import log from "./log";
 
 let shared;
@@ -9,7 +9,7 @@ export default function readSharedFromRoot() {
     if (!shared) shared = readSharedFromRootImpl();
     return shared;
 }
-const PACKAGE_JSON_PATH = path.resolve(rootPath, PACKAGE_JSON);
+const PACKAGE_JSON_PATH = path.resolve(ROOT_PATH, PACKAGE_JSON);
 const DEFAULT_SINGLETON = ['react', 'react-dom'];
 
 function readSharedFromRootImpl() {

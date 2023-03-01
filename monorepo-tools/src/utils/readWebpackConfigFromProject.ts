@@ -8,7 +8,7 @@ import readExposesFromProject from "./readExposesFromProject";
 import path from "path";
 import fs from "fs";
 import HtmlWebpackPlugin from "html-webpack-plugin";
-import {OUTPUT_DIRECTORY_DEFAULT, rootPath} from "../const";
+import {OUTPUT_DIRECTORY_DEFAULT, ROOT_PATH} from "../const";
 
 const {ModuleFederationPlugin} = webpack.container;
 /**
@@ -54,7 +54,7 @@ function readWebpackConfig(project: Project, remotes, config, isProd, port, unif
         entry: project.entry,
         output: {
             // 如果统一启动，则输出到根目录下。独立启动，输出到各自项目目录下
-            path: unify && !isRootApp ? path.resolve(rootPath, OUTPUT_DIRECTORY_DEFAULT, project.name)
+            path: unify && !isRootApp ? path.resolve(ROOT_PATH, OUTPUT_DIRECTORY_DEFAULT, project.name)
                 : path.resolve(project.projectRootPath, OUTPUT_DIRECTORY_DEFAULT),
             publicPath: unify && !isRootApp ? `/${project.name}/` : '/'
         },
