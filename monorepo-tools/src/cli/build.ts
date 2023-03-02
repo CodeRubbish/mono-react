@@ -5,7 +5,7 @@ import webpack from "webpack";
 import {ROOT_DIR_DEFAULT} from "../const";
 import process from "process";
 import type {IConfig, IOptions} from "../types/interface";
-import readBuildWebpackConfigFromProject from "../utils/readBuildWebpackConfigFromProject";
+import readWebpackConfigFromProject from "../utils/readWebpackConfigFromProject";
 
 /**
  * 启动一个指定项目
@@ -13,7 +13,8 @@ import readBuildWebpackConfigFromProject from "../utils/readBuildWebpackConfigFr
  */
 export default async function build(options: IOptions) {
     // 构建模式默认为生产模式
-    const {unify, prod = true, project, config} = options;
+    const {prod = true, project, config} = options;
+    const unify = typeof options.unify === 'undefined' ? false : typeof options.unify === "boolean" ? options.unify : +options.unify;
     const serveConfig: IConfig = readConfig(config);
     const rootPath = serveConfig.rootDir || ROOT_DIR_DEFAULT;
     const projects = scanProject(rootPath, serveConfig);
@@ -32,14 +33,29 @@ export default async function build(options: IOptions) {
         log.error('there are no project to build,please make sure you have any project or specify the right project name');
         process.exit(2);
     }
-    const projectWebpackConfig = readBuildWebpackConfigFromProject(buildProjects, serveConfig, projects, prod, unify);
+    const projectWebpackConfig = readWebpackConfigFromProject(buildProjects, serveConfig, projects, true, {
+        prod,
+        unify
+    });
     console.log(projectWebpackConfig);
     const compiler = webpack(projectWebpackConfig);
-    try {
-        compiler.run(() => {
-        });
-    } catch (e) {
-        log.error('error happen when compile projects', e);
-        process.exit(2);
-    }
+    compiler.run((err: any, stats) => {
+        if (err) {
+            console.error(err.stack || err);
+            if (err.details) {
+                console.error(err.details);
+            }
+            return;
+        }
+        const info = stats.toJson();
+
+        if (stats.hasErrors()) {
+            console.error(info.errors);
+        }
+
+        if (stats.hasWarnings()) {
+            console.warn(info.warnings);
+        }
+    });
+
 };

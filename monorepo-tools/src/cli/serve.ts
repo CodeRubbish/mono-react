@@ -15,11 +15,15 @@ import type {IConfig, IOptions} from "../types/interface";
  * @param options
  */
 export default async function serve(options: IOptions) {
-    const {unify, prod, project, config} = options;
+    const {prod, project, config} = options;
+    const unify = typeof options.unify === 'undefined' ? false : typeof options.unify === "boolean" ? options.unify : +options.unify;
     const serveConfig: IConfig = readConfig(config);
+    // 用于扫描项目的根地址
     const rootPath = serveConfig.rootDir || ROOT_DIR_DEFAULT;
+    // 在指定根路径下扫描项目
     const projects = scanProject(rootPath, serveConfig);
-    let serveProjects = projects;// 默认启动所有项目
+    // 默认启动所有项目
+    let serveProjects = projects;
     // project 存在说明用户指定了字段，使用用户指定项目
     if (project) {
         const userProjects = project.split(',');
@@ -35,12 +39,15 @@ export default async function serve(options: IOptions) {
         process.exit(2);
     }
     let ports;
-    if (typeof unify !== "undefined") {
-        // 所有项目都在一个端口启动时候，只获取一个端口,如果用户指定了端口，则使用指定端口
-        ports = typeof unify === "boolean" ? await getPorts(unify ? 1 : serveProjects.length) : [+unify];
+    if (unify === true) {
+        // 所有项目都在一个端口启动时候
+        ports = await getPorts(unify ? 1 : serveProjects.length);
     }
-    const projectWebpackConfig = readWebpackConfigFromProject(serveProjects, serveConfig, projects, prod, ports);
-    console.log(projectWebpackConfig);
+    const projectWebpackConfig = readWebpackConfigFromProject(serveProjects, serveConfig, projects, false, {
+        prod,
+        ports,
+        unify
+    });
     if (unify) {
         const compiler = webpack(projectWebpackConfig);
         const server = new WebpackDevServer({
