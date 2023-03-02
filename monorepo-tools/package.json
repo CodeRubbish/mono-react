@@ -46,7 +46,9 @@
     "@module-federation/fmr": "^0.0.7",
     "@babel/plugin-transform-runtime": "^7.21.0",
     "generic-names": "^2.0.1",
-    "html-webpack-plugin": "^5.5.0"
+    "html-webpack-plugin": "^5.5.0",
+    "babel-plugin-react-css-modules": "^5.2.6",
+    "core-js": "^3.29.0"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",
