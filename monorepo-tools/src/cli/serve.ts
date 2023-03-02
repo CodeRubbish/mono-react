@@ -6,11 +6,9 @@ import getPorts from "../utils/getPorts";
 import webpack from "webpack";
 import WebpackDevServer from "webpack-dev-server";
 import path from "path";
-import {OUTPUT_DIRECTORY_DEFAULT} from "../const";
+import {OUTPUT_DIRECTORY_DEFAULT, ROOT_DIR_DEFAULT, ROOT_PATH} from "../const";
 import process from "process";
 import type {IConfig, IOptions} from "../types/interface";
-
-const DEFAULT_ROOT_DIR = 'packages';
 
 /**
  * 启动一个指定项目
@@ -19,7 +17,7 @@ const DEFAULT_ROOT_DIR = 'packages';
 export default async function serve(options: IOptions) {
     const {unify, prod, project, config} = options;
     const serveConfig: IConfig = readConfig(config);
-    const rootPath = serveConfig.rootDir || DEFAULT_ROOT_DIR;
+    const rootPath = serveConfig.rootDir || ROOT_DIR_DEFAULT;
     const projects = scanProject(rootPath, serveConfig);
     let serveProjects = projects;// 默认启动所有项目
     if (project) {

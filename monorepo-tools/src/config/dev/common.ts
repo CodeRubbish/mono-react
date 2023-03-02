@@ -1,7 +1,7 @@
 import {Configuration, RuleSetRule} from "webpack";
 import ReactRefreshPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+import genericName from "generic-names";
 
-const genericName = require("generic-names");
 const generateRule = "[name]__[local]___[hash:base64:8]";
 
 const oneOfLoader: (context) => RuleSetRule[] = (context) => [
@@ -98,7 +98,7 @@ const oneOfLoader: (context) => RuleSetRule[] = (context) => [
         loader: require.resolve('html-loader')
     }
 ];
-export const commonConfig: (context) => Configuration = (context) => ({
+const commonConfig: (context) => Configuration = (context) => ({
     mode: "development",
     context: context,
     devtool: "eval-cheap-module-source-map",
@@ -119,3 +119,4 @@ export const commonConfig: (context) => Configuration = (context) => ({
         extensions: ['.ts', '.tsx', '...'],
     },
 });
+export default commonConfig;
