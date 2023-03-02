@@ -6,7 +6,7 @@ import getPorts from "../utils/getPorts";
 import webpack from "webpack";
 import WebpackDevServer from "webpack-dev-server";
 import path from "path";
-import {OUTPUT_DIRECTORY_DEFAULT, ROOT_DIR_DEFAULT, ROOT_PATH} from "../const";
+import {OUTPUT_DIRECTORY_DEFAULT, ROOT_DIR_DEFAULT} from "../const";
 import process from "process";
 import type {IConfig, IOptions} from "../types/interface";
 
@@ -20,6 +20,7 @@ export default async function serve(options: IOptions) {
     const rootPath = serveConfig.rootDir || ROOT_DIR_DEFAULT;
     const projects = scanProject(rootPath, serveConfig);
     let serveProjects = projects;// 默认启动所有项目
+    // project 存在说明用户指定了字段，使用用户指定项目
     if (project) {
         const userProjects = project.split(',');
         serveProjects = [];
@@ -36,7 +37,7 @@ export default async function serve(options: IOptions) {
     let ports;
     if (typeof unify !== "undefined") {
         // 所有项目都在一个端口启动时候，只获取一个端口,如果用户指定了端口，则使用指定端口
-        ports = Number.isNaN(+unify) ? await getPorts(unify ? 1 : serveProjects.length) : [+unify];
+        ports = typeof unify === "boolean" ? await getPorts(unify ? 1 : serveProjects.length) : [+unify];
     }
     const projectWebpackConfig = readWebpackConfigFromProject(serveProjects, serveConfig, projects, prod, ports);
     console.log(projectWebpackConfig);

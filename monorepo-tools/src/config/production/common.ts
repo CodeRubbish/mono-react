@@ -100,9 +100,8 @@ const oneOfLoader: (context) => RuleSetRule[] = (context) => [
 const commonConfig: (context) => Configuration = (context) => ({
     mode: "production",
     context: context,
-    devtool: "none",
+    devtool: "nosources-source-map",
     output: {
-        clean: true,
         chunkFilename: "chunk.[contenthash:8].js",
         filename: "[name].[contenthash:8].js",
     },
@@ -112,7 +111,10 @@ const commonConfig: (context) => Configuration = (context) => ({
         ]
     },
     plugins: [
-        new MiniCssExtractPlugin(),
+        new MiniCssExtractPlugin({
+            filename: '[name].[contenthash:8].css',
+            chunkFilename: 'chunk.[contenthash:8].css',
+        }),
     ],
     resolve: {
         extensions: ['.ts', '.tsx', '...'],

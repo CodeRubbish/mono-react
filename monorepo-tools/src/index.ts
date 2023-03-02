@@ -2,6 +2,7 @@
 import {program} from "commander";
 import {version} from '../package.json';
 import serve from './cli/serve';
+import build from "./cli/build";
 
 program
     .name('monorepo-tools')
@@ -15,5 +16,12 @@ program.command('serve')
     .option('-u, --unify [port]', 'build in one port')
     .option('-c, --config <configFile>', 'config file')
     .action(serve);
+program.command('build')
+    .description('serve projects')
+    .option('--prod', 'production preset')
+    .option('-p, --project <projectName>', 'projects for build')
+    .option('-u, --unify [port]', 'build in one port')
+    .option('-c, --config <configFile>', 'config file')
+    .action(build);
 
 program.parse();

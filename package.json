@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "monorepo-tools serve -u",
+    "build": "monorepo-tools build -u",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {

@@ -10,33 +10,33 @@ import fs from "fs";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import {OUTPUT_DIRECTORY_DEFAULT, REMOTE_ENTRY, ROOT_PATH} from "../const";
 import {IConfig, IProject} from "../types/interface";
-
+// TODO: 合并读取webpack配置
 const {ModuleFederationPlugin} = webpack.container;
 /**
  * 读取项目的webpack的配置文件
- * @param runProjects 需要运行的应用
+ * @param buildProjects 需要运行的应用
  * @param serveConfig 用户设置的配置
  * @param all 所有应用
  * @param isProd
- * @param ports
+ * @param unify
  */
-export default function readWebpackConfigFromProject(runProjects: Project[], serveConfig: IConfig, all, isProd, ports) {
+export default function readBuildWebpackConfigFromProject(buildProjects: Project[], serveConfig: IConfig, all, isProd, unify) {
     const webpackConfigs = [];
     const remotes = {};
-    const remoteProjects = all.filter(project => !runProjects.includes(project));
+    const remoteProjects = all.filter(project => !buildProjects.includes(project));
     remoteProjects.forEach(project => {
         // TODO 增加环境变量
-        remotes[project.name] = serveConfig[project.name].deployUrl; // 远端项目使用其部署地址
+        remotes[project.name] = `${project.name}@${path.resolve(serveConfig[project.name].deployUrl, REMOTE_ENTRY)}`; // 远端项目使用其部署地址
     });
-    runProjects.forEach((project, index) => {
-        const wpc = readWebpackConfig(project, remotes, serveConfig[project.name], isProd, ports[index] || ports[0], ports.length === 1);
+    buildProjects.forEach((project) => {
+        const wpc = readWebpackConfig(project, remotes, serveConfig[project.name], isProd, unify);
         webpackConfigs.push(wpc);
     });
     console.log('remotes', remotes);
     return webpackConfigs;
 }
 
-function readWebpackConfig(project: Project, remotes: Record<string, string>, config: IProject, isProd, port, unify): Configuration {
+function readWebpackConfig(project: Project, remotes: Record<string, string>, config: IProject, isProd, unify): Configuration {
     const commonConfig = getCommonCfg(isProd)(project.projectRootPath);
     const configFilePath = config?.webpack;
     const isRootApp = Boolean(config?.root && project.isApplication());
@@ -45,19 +45,19 @@ function readWebpackConfig(project: Project, remotes: Record<string, string>, co
         name: project.name,
         remotes: remotes,
         filename: REMOTE_ENTRY,
-        shared
+        shared,
     };
     const exposes = readExposesFromProject(project);
     if (exposes) {
         mfp.exposes = exposes;
-        const remotePath = isRootApp ? `http://localhost:${port}/remoteEntry.js` : `http://localhost:${port}/${project.name}/remoteEntry.js`;
+        const remotePath = path.resolve(config.deployUrl, REMOTE_ENTRY);
         remotes[project.name] = `${project.name}@${remotePath}`;
     }
     const webpackConfig: Configuration = {
         entry: project.entry,
         output: {
-            // 如果统一启动，则输出到根目录下。独立启动，输出到各自项目目录下
-            path: unify ? path.resolve(ROOT_PATH, OUTPUT_DIRECTORY_DEFAULT, isRootApp ? '/' : project.name)
+            // 如果统一构建，则输出到根目录下。独立启动，输出到各自项目目录下
+            path: unify ? path.resolve(ROOT_PATH, OUTPUT_DIRECTORY_DEFAULT, isRootApp ? './' : project.name)
                 : path.resolve(project.projectRootPath, OUTPUT_DIRECTORY_DEFAULT),
             publicPath: unify && !isRootApp ? `/${project.name}/` : '/'
         },

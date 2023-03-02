@@ -1,13 +1,14 @@
 import type {RollupOptions} from 'rollup';
 import typescript from "@rollup/plugin-typescript";
 import json from '@rollup/plugin-json';
-import shebang from 'rollup-plugin-preserve-shebang';
+import shebang from 'rollup-plugin-preserve-shebang'; // 保留  shebang: '#!/usr/bin/env node'
 
 const config: RollupOptions = {
     input: './src/index.ts',
     output: {
         file: 'bin/index.js',
-        format: 'commonjs'
+        format: 'commonjs',
+        sourcemap: true,
     },
     plugins: [
         json(),
@@ -27,7 +28,9 @@ const config: RollupOptions = {
         "fs",
         "process",
         "html-loader",
-        "chalk"
+        "chalk",
+        "mini-css-extract-plugin",
+        "generic-names"
     ],
 };
 export default config;

@@ -103,7 +103,6 @@ const commonConfig: (context) => Configuration = (context) => ({
     context: context,
     devtool: "eval-cheap-module-source-map",
     output: {
-        clean: true,
         chunkFilename: "chunk.[name].js",
         filename: "[name].js",
     },
