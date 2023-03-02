@@ -103,6 +103,7 @@ const commonConfig: (context) => Configuration = (context) => ({
     context: context,
     devtool: "eval-cheap-module-source-map",
     output: {
+        // 在内存中，无需要clean
         chunkFilename: "chunk.[name].js",
         filename: "[name].js",
     },

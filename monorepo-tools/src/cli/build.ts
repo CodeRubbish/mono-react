@@ -37,7 +37,6 @@ export default async function build(options: IOptions) {
         prod,
         unify
     });
-    console.log(projectWebpackConfig);
     const compiler = webpack(projectWebpackConfig);
     compiler.run((err: any, stats) => {
         if (err) {

@@ -30,7 +30,9 @@ const config: RollupOptions = {
         "html-loader",
         "chalk",
         "mini-css-extract-plugin",
-        "generic-names"
+        "generic-names",
+        "compression-webpack-plugin",
+        "terser-webpack-plugin"
     ],
 };
 export default config;

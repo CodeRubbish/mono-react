@@ -1,6 +1,8 @@
 import {Configuration, RuleSetRule} from "webpack";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import CompressionPlugin from "compression-webpack-plugin";
 import genericName from "generic-names";
+import TerserPlugin from "terser-webpack-plugin";
 
 const generateRule = "[hash:base64:16]";
 
@@ -102,8 +104,10 @@ const commonConfig: (context) => Configuration = (context) => ({
     context: context,
     devtool: "nosources-source-map",
     output: {
+        clean: true,
         chunkFilename: "chunk.[contenthash:8].js",
         filename: "[name].[contenthash:8].js",
+        crossOriginLoading: "anonymous",
     },
     module: {
         rules: [
@@ -114,6 +118,19 @@ const commonConfig: (context) => Configuration = (context) => ({
         new MiniCssExtractPlugin({
             filename: '[name].[contenthash:8].css',
             chunkFilename: 'chunk.[contenthash:8].css',
+        }),
+        new CompressionPlugin(),
+        new TerserPlugin({
+            terserOptions: {
+                compress: {
+                    drop_console: true,
+                    drop_debugger: true
+                },
+                format: {
+                    comments: false,
+                },
+            },
+            extractComments: false,
         }),
     ],
     resolve: {
