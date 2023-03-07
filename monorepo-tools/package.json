@@ -50,7 +50,8 @@
     "babel-plugin-react-css-modules": "^5.2.6",
     "core-js": "^3.29.0",
     "compression-webpack-plugin": "^10.0.0",
-    "terser-webpack-plugin": "^5.3.6"
+    "terser-webpack-plugin": "^5.3.6",
+    "css-minimizer-webpack-plugin": "^4.2.2"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",

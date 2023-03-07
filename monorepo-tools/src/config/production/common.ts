@@ -3,6 +3,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CompressionPlugin from "compression-webpack-plugin";
 import genericName from "generic-names";
 import TerserPlugin from "terser-webpack-plugin";
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 
 const generateRule = "[hash:base64:16]";
 
@@ -114,11 +115,18 @@ const commonConfig: (context) => Configuration = (context) => ({
             {oneOf: oneOfLoader(context)}
         ]
     },
+    optimization: {
+        minimizer: [
+            '...',
+            new CssMinimizerPlugin(),
+        ],
+    },
     plugins: [
         new MiniCssExtractPlugin({
             filename: '[name].[contenthash:8].css',
             chunkFilename: 'chunk.[contenthash:8].css',
         }),
+        // gzip压缩
         new CompressionPlugin(),
         new TerserPlugin({
             terserOptions: {

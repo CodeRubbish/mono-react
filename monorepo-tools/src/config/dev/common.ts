@@ -7,7 +7,6 @@ const generateRule = "[name]__[local]___[hash:base64:8]";
 const oneOfLoader: (context) => RuleSetRule[] = (context) => [
     {
         test: /\.tsx?$/,
-        exclude: /[\\/]node_modules[\\/]/,
         use: [
             {
                 loader: require.resolve('babel-loader'),
@@ -28,7 +27,7 @@ const oneOfLoader: (context) => RuleSetRule[] = (context) => [
                         [
                             'babel-plugin-react-css-modules', {
                             "generateScopedName": generateRule,
-                            context,
+                            context
                         }
                         ],
                     ]
@@ -38,7 +37,6 @@ const oneOfLoader: (context) => RuleSetRule[] = (context) => [
     },
     {
         test: /\.(le|c)ss$/,
-        exclude: /[\\/]node_modules[\\/]/,
         use: [
             require.resolve('style-loader'),
             {
@@ -73,7 +71,8 @@ const oneOfLoader: (context) => RuleSetRule[] = (context) => [
                 loader: require.resolve('less-loader'),
                 options: {
                     lessOptions: {
-                        strictMath: 'always', // 符合3.x用户使用习惯
+                        strictMath: 'always', // 符合3.x用户使用习惯,
+                        javascriptEnabled: true,
                     },
                 }
             }

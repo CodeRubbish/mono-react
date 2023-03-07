@@ -32,7 +32,8 @@ const config: RollupOptions = {
         "mini-css-extract-plugin",
         "generic-names",
         "compression-webpack-plugin",
-        "terser-webpack-plugin"
+        "terser-webpack-plugin",
+        "css-minimizer-webpack-plugin"
     ],
 };
 export default config;
