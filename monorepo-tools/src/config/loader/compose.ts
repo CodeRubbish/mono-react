@@ -6,8 +6,6 @@ export default function compose(...loaders) {
     return (commonArgs) => loaders.reduceRight(
         (list, loader, currentIndex) => {
             list.unshift(...loader(commonArgs, currentIndex, list));
-            console.log(list);
             return list;
-        },
-        []);
+        }, []);
 }

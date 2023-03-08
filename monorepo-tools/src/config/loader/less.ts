@@ -1,16 +1,17 @@
+import {RuleSetRule, RuleSetUseItem} from "webpack";
+import {CommonArgs} from "./interface";
+
 /**
  * less编译在生产环境和开发环境一致
  */
-export default function less() {
-    return [
+export default function less({project}: CommonArgs, index: number, list: RuleSetUseItem[]) {
+    const loaders: RuleSetRule['use'] = [
         {
             loader: require.resolve('less-loader'),
             options: {
-                lessOptions: {
-                    strictMath: 'always', // 符合3.x用户使用习惯,
-                    javascriptEnabled: true,
-                },
+                lessOptions: project?.lessOptions ?? {}
             }
         }
     ];
+    return loaders;
 }

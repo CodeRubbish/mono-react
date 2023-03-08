@@ -1,13 +1,14 @@
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import genericName from "generic-names";
-import {RuleSetRule} from "webpack";
+import {RuleSetUseItem} from "webpack";
+import {CommonArgs} from "./interface";
 
 /**
  * produce loader to compile css and extract it in production
  */
-export default function css({prod = false}, index, list) {
-    const generateRule = prod ? "[hash:base64:16]" : "[name]__[local]___[hash:base64:8]";
-    const loaders: RuleSetRule['use'] = [
+export default function css({prod}: CommonArgs, index: number, list: RuleSetUseItem[]) {
+    const generateRule = getGenerateRule(prod);
+    const loaders: RuleSetUseItem[] = [
         // 生产模式下分离CSS样式
         prod ? MiniCssExtractPlugin.loader : require.resolve('style-loader'),
         {

@@ -21,11 +21,11 @@ export default class Project {
         this.projectRootPath = projectRootPath;
     }
 
-    isApplication() {
+    isApplication(): this is AppProject {
         return this.type === ProjectType.Application;
     }
 
-    isLibrary() {
+    isLibrary(): this is LibProject {
         return this.type === ProjectType.Library;
     }
 }
@@ -33,9 +33,15 @@ export default class Project {
 export class AppProject extends Project {
     type = ProjectType.Application;
     htmlTemplate: string; // 应用的Html模板
+    root = false;// 默认非根应用
+
     constructor(name, entry, projectRootPath, alias, htmlTemplate) {
         super(name, entry, projectRootPath, alias);
         this.htmlTemplate = htmlTemplate;
+    }
+
+    isRoot(): boolean {
+        return this.root;
     }
 }
 

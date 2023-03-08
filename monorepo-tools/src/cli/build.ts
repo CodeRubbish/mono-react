@@ -15,7 +15,7 @@ import less from "../config/loader/less";
  * @param options
  */
 export default async function build(options: IOptions) {
-    console.log(compose(css, less)({prod: false}));
+    console.log(compose(css, less)({prod: true}));
     return;
     // 构建模式默认为生产模式
     const {prod = true, project, config} = options;

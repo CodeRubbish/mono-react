@@ -71,7 +71,7 @@ const oneOfLoader: (context) => RuleSetRule[] = (context) => [
                 loader: require.resolve('less-loader'),
                 options: {
                     lessOptions: {
-                        strictMath: 'always', // 符合3.x用户使用习惯,
+                        math: 'always', // 符合3.x用户使用习惯,
                         javascriptEnabled: true,
                     },
                 }
