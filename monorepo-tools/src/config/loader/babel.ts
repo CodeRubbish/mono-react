@@ -12,18 +12,18 @@ export default function babel({project, prod}: CommonArgs, index: number, list: 
             options: {
                 presets: [
                     [
-                        '@babel/preset-env', {
+                        require.resolve('@babel/preset-env'), {
                         useBuiltIns: "usage",
                         corejs: "3"
                     }
                     ],
-                    '@babel/preset-react',
-                    '@babel/preset-typescript',
+                    require.resolve('@babel/preset-react'),
+                    require.resolve('@babel/preset-typescript'),
                 ],
                 plugins: [
-                    "@babel/plugin-transform-runtime",
+                    require.resolve("@babel/plugin-transform-runtime"),
                     [
-                        'babel-plugin-react-css-modules', {
+                        require.resolve('babel-plugin-react-css-modules'), {
                         "generateScopedName": generateRule,
                         context: project.projectRootPath
                     }
