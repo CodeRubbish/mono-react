@@ -6,17 +6,12 @@ import {ROOT_DIR_DEFAULT} from "../const";
 import process from "process";
 import type {IConfig, IOptions} from "../types/interface";
 import readWebpackConfigFromProject from "../utils/readWebpackConfigFromProject";
-import compose from "../config/loader/compose";
-import css from "../config/loader/css";
-import less from "../config/loader/less";
 
 /**
  * 启动一个指定项目
  * @param options
  */
 export default async function build(options: IOptions) {
-    console.log(compose(css, less)({prod: true}));
-    return;
     // 构建模式默认为生产模式
     const {prod = true, project, config} = options;
     const unify = typeof options.unify === 'undefined' ? false : typeof options.unify === "boolean" ? options.unify : +options.unify;
@@ -26,7 +21,7 @@ export default async function build(options: IOptions) {
     let buildProjects = projects;// 默认构建所有项目
     // project 存在说明用户指定了字段，使用用户指定项目
     if (project) {
-        const userProjects = project.split(',');// 用户指定了构建项目
+        const userProjects = project.split(/[,\s]/);// 用户指定了构建项目
         buildProjects = [];
         userProjects.forEach(projectName => {
             const matchProject = projects.find(_ => _.name === projectName);

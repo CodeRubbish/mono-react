@@ -26,8 +26,6 @@ export default function scanProject(projectRootPath: string, config: IConfig) {
             alias[`@${dir.name}`] = path.resolve(projectRootPath, dir.name);
         }
     });
-    console.log('projects', projects);
-    console.log('alias for all', alias);
     return projects.map(project => readProjectConfig(project, projectRootPath, config, alias)).filter(i => i);
 }
 

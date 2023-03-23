@@ -53,7 +53,6 @@ export default async function serve(options: IOptions) {
         const server = new WebpackDevServer({
             port: ports[0],
             hot: true,
-            magicHtml: true,
             static: path.resolve(rootPath, OUTPUT_DIRECTORY_DEFAULT),// 暂不支持用户指定输出目录
         }, compiler);
         try {
@@ -65,7 +64,5 @@ export default async function serve(options: IOptions) {
     }
 };
 const runServer = async (server, name = '') => {
-    console.log('application start：' + name);
     await server.start();
-    console.log('application start success：' + name);
 };
