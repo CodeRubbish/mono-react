@@ -2,6 +2,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import genericName from "generic-names";
 import {RuleSetUseItem} from "webpack";
 import {CommonArgs} from "./interface";
+import {getGenerateRule} from "./common";
 
 /**
  * produce loader to compile css and extract it in production

@@ -1,1 +1,1 @@
-const getGenerateRule = prod => prod ? "[hash:base64:16]" : "[name]__[local]___[hash:base64:8]";
+export const getGenerateRule = prod => prod ? "[hash:base64:16]" : "[name]__[local]___[hash:base64:8]";

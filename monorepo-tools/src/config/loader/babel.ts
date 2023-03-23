@@ -1,6 +1,6 @@
 import {RuleSetUseItem} from "webpack";
 import {CommonArgs} from "./interface";
-
+import {getGenerateRule} from './common';
 /**
  * less编译在生产环境和开发环境一致
  */
