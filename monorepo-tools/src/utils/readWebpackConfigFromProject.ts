@@ -11,6 +11,7 @@ import readExposesFromProject from "./readExposesFromProject";
 import {OUTPUT_DIRECTORY_DEFAULT, REMOTE_ENTRY, ROOT_PATH} from "../const";
 import {IConfig, IProject} from "../types/interface";
 import {readEnvFromProject} from "./readEnvFromProject";
+import formatEnv from "./formatEnv";
 
 interface IReadConfig {
     prod: boolean;
@@ -96,6 +97,7 @@ function readWebpackConfig(project: Project, remotes: Record<string, string>, co
         remotes[project.name] = `${project.name}@${remotePath}`;
     }
     const environment = readEnvFromProject(project, env, isBuild);
+    commonConfig.plugins.push(new webpack.DefinePlugin(formatEnv(environment)));
     const webpackConfig: Configuration = {
         entry: project.entry,
         context: project.projectRootPath,
