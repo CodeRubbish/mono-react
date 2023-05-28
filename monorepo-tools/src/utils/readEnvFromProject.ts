@@ -1,16 +1,24 @@
 import Project from "../project";
 import path from "path";
-import {PACKAGE_JSON} from "../const";
+import fs from "fs";
+import {ENV_DEV, ENV_PROD, ENVIRONMENT_DEFAULT} from "../const";
+
 
 /**
  * 读取当前项目的环境变量配置
  * @param project
  * @param env
+ * @param isBuild
  */
-export function readEnvFromProject(project: Project, env: string) {
-  const package_json_path = path.resolve(project.projectRootPath, project.name, PACKAGE_JSON);
-  const packageJSON = require(package_json_path);
-  if (packageJSON.env) {
-    return packageJSON.env[env];
-  }
+export function readEnvFromProject(project: Project, env: string, isBuild: boolean): null | Record<string, any> {
+    const environment_path = path.resolve(project.projectRootPath, project.name, ENVIRONMENT_DEFAULT);
+    if (!fs.existsSync(environment_path)) {
+        return null;
+    }
+    const environment = require(environment_path);
+    if (environment[env]) {
+        return environment[env];
+    }
+    const useEnv = isBuild ? ENV_PROD : ENV_DEV;
+    return environment[useEnv] || environment[ENV_DEV] || null;
 }

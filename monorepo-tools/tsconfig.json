@@ -3,6 +3,7 @@
     "baseUrl": ".",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "outDir": "bin",
     "module": "esnext",
     "target": "esnext",

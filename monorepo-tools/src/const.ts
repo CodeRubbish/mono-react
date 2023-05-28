@@ -7,3 +7,4 @@ export const ROOT_PATH = process.cwd();
 export const PACKAGE_JSON = 'package.json';
 export const ENV_PROD = 'PROD';
 export const ENV_DEV = 'DEV';
+export const ENVIRONMENT_DEFAULT = 'environment.js';

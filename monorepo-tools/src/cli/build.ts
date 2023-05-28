@@ -14,7 +14,8 @@ export default async function build(options: IOptions) {
     const {useProjects, projects} = resolveUseProjects(project, rootPath, serveConfig);
     const projectWebpackConfig = readWebpackConfigFromProject(useProjects, serveConfig, projects, true, {
         prod,
-        unify
+        unify,
+        env
     });
     compile(projectWebpackConfig);
 };

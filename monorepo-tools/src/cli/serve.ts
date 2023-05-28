@@ -26,7 +26,8 @@ export default async function serve(options: IOptions) {
     const projectWebpackConfig = readWebpackConfigFromProject(useProjects, serveConfig, projects, false, {
         prod,
         ports,
-        unify
+        unify,
+        env
     });
     await server(projectWebpackConfig, {port: ports[0], rootPath});
 };

@@ -10,11 +10,13 @@ import readSharedFromRoot from "./readSharedFromRoot";
 import readExposesFromProject from "./readExposesFromProject";
 import {OUTPUT_DIRECTORY_DEFAULT, REMOTE_ENTRY, ROOT_PATH} from "../const";
 import {IConfig, IProject} from "../types/interface";
+import {readEnvFromProject} from "./readEnvFromProject";
 
 interface IReadConfig {
     prod: boolean;
     ports?: number[];
     unify: boolean | number;
+    env: string;
 }
 
 const {ModuleFederationPlugin} = webpack.container;
@@ -27,13 +29,15 @@ const {ModuleFederationPlugin} = webpack.container;
  * @param prod
  * @param ports
  * @param unify
+ * @param env
  */
 export default function readWebpackConfigFromProject(projects: Project[], serveConfig: IConfig, allProject: Project[], isBuild: boolean, {
     prod,
     ports,
-    unify
+    unify,
+    env,
 }: IReadConfig) {
-    const webpackConfigs:Configuration[] = [];
+    const webpackConfigs: Configuration[] = [];
     const remotes = {};
     const remoteProjects = allProject.filter(project => !projects.includes(project));
     remoteProjects.forEach(project => {
@@ -55,7 +59,8 @@ export default function readWebpackConfigFromProject(projects: Project[], serveC
             prod,
             port: isBuild ? undefined : typeof unify === 'number' ? unify : typeof unify === 'boolean' ? ports[0] : ports[index],
             unify,
-            isRootApp: rootProjectName == project.name
+            isRootApp: rootProjectName == project.name,
+            env
         });
         webpackConfigs.push(wpc);
     });
@@ -67,7 +72,8 @@ function readWebpackConfig(project: Project, remotes: Record<string, string>, co
     prod,
     port,
     unify,
-    isRootApp
+    isRootApp,
+    env
 }): Configuration {
     const commonConfig = getCommonCfg({prod, project, unify});
     const configFilePath = config?.webpack;
@@ -89,6 +95,8 @@ function readWebpackConfig(project: Project, remotes: Record<string, string>, co
         }
         remotes[project.name] = `${project.name}@${remotePath}`;
     }
+    const environment = readEnvFromProject(project, env, isBuild);
+
     const webpackConfig: Configuration = {
         entry: project.entry,
         context: project.projectRootPath,
