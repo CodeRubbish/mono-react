@@ -97,7 +97,6 @@ function readWebpackConfig(project: Project, remotes: Record<string, string>, co
         remotes[project.name] = `${project.name}@${remotePath}`;
     }
     const environment = readEnvFromProject(project, env, isBuild);
-    commonConfig.plugins.push(new webpack.DefinePlugin(formatEnv(environment)));
     const webpackConfig: Configuration = {
         entry: project.entry,
         context: project.projectRootPath,
@@ -119,7 +118,7 @@ function readWebpackConfig(project: Project, remotes: Record<string, string>, co
         }
     }
 
-    return merge(commonConfig, webpackConfig, customWebpackConfig, {plugins: [new ModuleFederationPlugin(mfp)]});
+    return merge(commonConfig, webpackConfig, customWebpackConfig, {plugins: [new ModuleFederationPlugin(mfp), new webpack.DefinePlugin(formatEnv(environment))]});
 }
 
 function readAppWebpackCfg(project): Configuration {
