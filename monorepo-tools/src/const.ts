@@ -8,3 +8,9 @@ export const PACKAGE_JSON = 'package.json';
 export const ENV_PROD = 'PROD';
 export const ENV_DEV = 'DEV';
 export const ENVIRONMENT_DEFAULT = 'environment.js';
+export const DEFAULT_BUILD_ENV = {
+    __DEV__: false,
+};
+export const DEFAULT_SERVE_ENV = {
+    __DEV__: true,
+};

@@ -96,7 +96,6 @@ function readWebpackConfig(project: Project, remotes: Record<string, string>, co
         remotes[project.name] = `${project.name}@${remotePath}`;
     }
     const environment = readEnvFromProject(project, env, isBuild);
-
     const webpackConfig: Configuration = {
         entry: project.entry,
         context: project.projectRootPath,
