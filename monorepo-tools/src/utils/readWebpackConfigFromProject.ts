@@ -23,7 +23,7 @@ const {ModuleFederationPlugin} = webpack.container;
  * @param projects 需要运行的应用
  * @param serveConfig 用户设置的配置
  * @param allProject 所有应用
- * @param isBuild
+ * @param isBuild 构建模式下使用部署地址当作远端连接
  * @param prod
  * @param ports
  * @param unify
@@ -33,7 +33,7 @@ export default function readWebpackConfigFromProject(projects: Project[], serveC
     ports,
     unify
 }: IReadConfig) {
-    const webpackConfigs = [];
+    const webpackConfigs:Configuration[] = [];
     const remotes = {};
     const remoteProjects = allProject.filter(project => !projects.includes(project));
     remoteProjects.forEach(project => {

@@ -5,6 +5,7 @@ export interface IOptions {
     prod: boolean; // 是否以生产模式启动，便于调试线上环境异常，由于生产模式启用content hash，所以默认关闭热更新
     project: string;// 指定启动项目列表，可仅启动指定项目，其余项目采用线上的远端模块地址
     config: string; // 配置项
+    env: string; // 当前环境，启动默认为DEV，构建默认为PROD，如果以生产模式启动，则默认为PROD
 }
 
 export interface IConfig {
