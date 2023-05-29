@@ -30,7 +30,7 @@ export default class Project {
                     log.warn(`your config option should not include key ${key},it will not work because it will conflict with internal key `);
                     return;
                 }
-                options[key] = options[key];
+                this[key] = options[key];
             });
         }
     }
