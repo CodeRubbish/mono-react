@@ -3,8 +3,8 @@ import fs from "fs";
 import process from "process";
 import log from "./log";
 import {ROOT_PATH} from "../const";
+import {DEFAULT_CONFIG} from "../const";
 
-const DEFAULT_CONFIG = 'monorepo-tools.config.js';
 export default function readConfig(config?) {
     // 尝试读取指定配置文件
     if (config) {

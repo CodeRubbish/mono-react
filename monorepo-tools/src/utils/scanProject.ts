@@ -3,7 +3,7 @@ import path from "path";
 import Project, {AppProject, LibProject} from "../project";
 import isProject from "./isProject";
 import {ROOT_PATH} from "../const";
-import {IConfig} from "../types/interface";
+import {IConfig, IProject} from "../types/interface";
 import {Configuration} from "webpack";
 
 /**
@@ -31,11 +31,12 @@ export default function scanProject(projectRootPath: string, config: IConfig) {
 
 function readProjectConfig(project: Project, projectRootPath: string, config: IConfig, alias: Configuration['resolve']['alias']) {
     const {name} = project;
+    const projectConfig: IProject = config[name] || {};
     const prp = path.resolve(projectRootPath, name);// project root path
-    const entry = analysisEntry(name, config[name], prp);
+    const entry = analysisEntry(name, projectConfig, prp);
     if (!entry) return null; // 无项目入口文件，放弃
-    const html = analysisHtml(name, config[name], prp);
-    return html ? new AppProject(name, entry, prp, alias, html) : new LibProject(name, entry, prp, alias);
+    const html = analysisHtml(name, projectConfig, prp);
+    return html ? new AppProject(name, entry, prp, alias, html, projectConfig.options) : new LibProject(name, entry, prp, alias, projectConfig.options);
 }
 
 /**
@@ -44,7 +45,7 @@ function readProjectConfig(project: Project, projectRootPath: string, config: IC
  * @param config
  * @param projectRootPath
  */
-function analysisEntry(projectName, config, projectRootPath) {
+function analysisEntry(projectName: string, config: IProject, projectRootPath) {
     const entry = config?.entry || path.resolve(projectRootPath, 'src', 'index.ts');
     if (fs.existsSync(entry)) {
         return entry;

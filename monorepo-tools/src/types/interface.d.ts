@@ -18,4 +18,8 @@ export interface IProject {
     root?: boolean; // 是否为根项目，仅在unify启动或者构建模式下有效，该项目的目录层级会提升
     webpack?: FilePath;// 自定义webpack配置文件
     deployUrl?: string; // 项目部署地址
+    entry?: string; // 项目入口地址
+    options?: {
+        lessOptions?: object;// lessOptions配置
+    };
 }
